@@ -1,0 +1,3 @@
+### ALL UNAUTHORIZED MODIFICATIONS ARE STRICTLY FORBIDDEN! ###
+Copyright 2019-2020 F. Bellesia, F. Catellani, D. Rocco, F. Valgimigli
+All Rights Reserved, by now...
