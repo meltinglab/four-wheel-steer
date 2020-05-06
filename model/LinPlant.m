@@ -17,11 +17,8 @@ x0 = 0;
 y0 = 0;
 deltaf = deg2rad * 30;
 deltar = 0;
-betaU = 0;
-omegaZ = 0;
-
-beta0 = 0.0001;
-w0 = 0;
+betaU0 = 0;
+omegaZ0 = 0;
 
 % Parameters
 g = 9.81;       % Gravity Acceleration [m/s^2]
@@ -56,7 +53,7 @@ r = 0.28;       % Wheel Radius [m]
 CR = -0.05;     % Rolling Resistance
 Iz = 1200*(rxr^2+ryf^2)^2;  % Z Axis Inertial Matrix
 
-V0 = 70/3.6;
+V0 = 50/3.6;
 V0max = 80/3.6;
 
 Fwz = m*g/4;
@@ -70,10 +67,10 @@ dFwydf = 2*(dfwzdf*muS*sin(deltar)+dfwzdf*(muL0+CR)*cos(deltar)+dfwzdf*muS*sin(d
 dFwxdr = 2*(dfwzdr*(muL0+CR)*cos(deltar)-Fwz*(muL0+CR)*sin(deltar)-dfwzdr*muS*sin(deltar)-Fwz*muS*cos(deltar)-dfwzdr*muS*sin(deltaf)+dfwzdr*(muL0+CR)*cos(deltaf));
 dFwxdf = 2*(dfwzdf*(muL0+CR)*cos(deltar)-dfwzdf*muS*sin(deltar)+dfwzdf*(muL0+CR)*cos(deltaf)-Fwz*(muL0+CR)*sin(deltaf)-dfwzdf*muS*sin(deltaf)+Fwz*muS*cos(deltaf));
 
-a11 = (1/(m*V0))*(cos(betaU)*Fwx+sin(betaU)*Fwy);
+a11 = (1/(m*V0))*(-cos(betaU0)*Fwx-sin(betaU0)*Fwy);
 a12 = -1;
-a21 = -V0/Iz*(2*Fwz*muL0*(rxf+rxr)/V0max);
-a22 = -1/Iz*(2*Fwz*muL0*(2*(rxf^2 + ryf^2)+2*(rxr^2+ryf^2))/V0max);
+a21 = -V0/Iz*(2*Fwz*muL0*(rxf+rxr)/V0);
+a22 = -1/Iz*(2*Fwz*muL0*(2*(rxf^2 + ryf^2)+2*(rxr^2+ryf^2))/V0);
 
 A = [a11 a12; a21 a22];
 eig(A)
@@ -92,13 +89,23 @@ b212 = 1/Iz*(2*CR*Fwz*(rxr)+2*Fwz*muL0*8/7*(rxr));
 B2 = [b211; b212];
 
 C = [1 0; 0 1];
-D = [0 0; 0 0];
+DA = [0 0; 0 0];
+D = [0 ; 0];
 
-xeq = (A)/[-B1*deltar -B2*deltaf];
+xeq = (A)^-1*[-B1*deltar -B2*deltaf];
 
-Q = inv(2*diag([(0.2/180*pi)^2 (1/180*pi)^2 (1/180*pi)^2 (1/180*pi)^2]));
-R = inv(4*eye(4)*(40*(2*pi)/60)^2);
-sys = ss(A, [B1, B2], C, D);
+%Q = inv(2*diag([(0.2/180*pi)^2 (1/180*pi)^2]));  % MAX 1/||x||
+%R = inv(4*eye(1)*(40*(2*pi)/60)^2);              % MAX 1/||u||
+Q = inv([0.1 0; 0 0.05]);
+R = inv([0.17]);
+sysA = ss(A, [B1, B2], C, DA);
+sysA.StateName = ["betaU","omegaZ"];
+sysA.InputName = ["deltar","deltaf"];
 
-Klqr = lqg(sys, Q, R);
-deltaR = Klqr*[betaU; omegaZ];
+sys = ss(A, B1, C, D);
+sys.StateName = ["betaU","omegaZ"];
+sys.InputName = ["deltar"];
+
+[Klqr, s, e] = lqr(sys, Q, R, 0);
+deltaR = - Klqr*[betaU; omegaZ];
+ESEMPIO = rad2deg*(-Klqr * [0.1047 ; 0.15])
