@@ -1,12 +1,9 @@
-% clc
-% close all
-% clear all
+function Klqr = LinPlant(deltaf, V0)
 
 global m rho S g rxf rxr ryf rx ry rz r Iz
 global Cx0 Cyb CR rk
 global delta
-global betaU omegaZ
-global Klqr xeq
+global xeq
 
 deg2rad = pi/180; % Degrees to Radians Coeff.
 rad2deg = 180/pi; % Radians to Degrees Coeff.
@@ -15,7 +12,7 @@ rad2deg = 180/pi; % Radians to Degrees Coeff.
 psi0 = 0;
 x0 = 0;
 y0 = 0;
-deltaf = deg2rad * 30;
+%deltaf = deg2rad * 30;
 deltar = 0;
 betaU0 = 0;
 omegaZ0 = 0;
@@ -53,7 +50,7 @@ r = 0.28;       % Wheel Radius [m]
 CR = -0.05;     % Rolling Resistance
 Iz = 1200*(rxr^2+ryf^2)^2;  % Z Axis Inertial Matrix
 
-V0 = 50/3.6;
+%V0 = 80/3.6;
 V0max = 80/3.6;
 
 Fwz = m*g/4;
@@ -92,12 +89,12 @@ C = [1 0; 0 1];
 DA = [0 0; 0 0];
 D = [0 ; 0];
 
-xeq = (A)^-1*[-B1*deltar -B2*deltaf];
+xeq = (A)^-1*[-B1*deltar -B2*deltaf]
 
 %Q = inv(2*diag([(0.2/180*pi)^2 (1/180*pi)^2]));  % MAX 1/||x||
 %R = inv(4*eye(1)*(40*(2*pi)/60)^2);              % MAX 1/||u||
 Q = inv([0.1 0; 0 0.05]);
-R = inv([0.17]);
+R = inv([0.035]);
 sysA = ss(A, [B1, B2], C, DA);
 sysA.StateName = ["betaU","omegaZ"];
 sysA.InputName = ["deltar","deltaf"];
@@ -107,5 +104,5 @@ sys.StateName = ["betaU","omegaZ"];
 sys.InputName = ["deltar"];
 
 [Klqr, s, e] = lqr(sys, Q, R, 0);
-deltaR = - Klqr*[betaU; omegaZ];
-ESEMPIO = rad2deg*(-Klqr * [0.1047 ; 0.15])
+%deltaR = - Klqr*[betaU - xeq(1,2); omegaZ - xeq(2,2)];
+ESEMPIO = rad2deg*(-Klqr * [0.1047 - xeq(1,1); 0.15 - xeq(1,2)])
