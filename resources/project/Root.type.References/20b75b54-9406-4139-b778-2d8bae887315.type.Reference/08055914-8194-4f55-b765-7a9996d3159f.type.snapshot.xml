@@ -1,0 +1,287 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<Info>
+    <MetadataNode>
+        <path value="ProjectData:type:Info">
+            <node name="Info">
+                <entry value="ConstRadius" key="Name" />
+            </node>
+        </path>
+        <path value="Root:type:Categories">
+            <path value="FileClassCategory:type:Category">
+                <node name="Info">
+                    <entry value="None" key="DataType" />
+                    <entry value="Classification" key="Name" />
+                    <entry value="1" key="ReadOnly" />
+                    <entry value="1" key="SingleValued" />
+                </node>
+                <path value="artifact:type:Label">
+                    <node name="Info">
+                        <entry value="Artifact" key="Name" />
+                        <entry value="READ_ONLY" key="ReadOnly" />
+                    </node>
+                </path>
+                <path value="convenience:type:Label">
+                    <node name="Info">
+                        <entry value="Convenience" key="Name" />
+                        <entry value="READ_ONLY" key="ReadOnly" />
+                    </node>
+                </path>
+                <path value="derived:type:Label">
+                    <node name="Info">
+                        <entry value="Derived" key="Name" />
+                        <entry value="READ_ONLY" key="ReadOnly" />
+                    </node>
+                </path>
+                <path value="design:type:Label">
+                    <node name="Info">
+                        <entry value="Design" key="Name" />
+                        <entry value="READ_ONLY" key="ReadOnly" />
+                    </node>
+                </path>
+                <path value="none:type:Label">
+                    <node name="Info">
+                        <entry value="None" key="Name" />
+                        <entry value="READ_ONLY" key="ReadOnly" />
+                    </node>
+                </path>
+                <path value="other:type:Label">
+                    <node name="Info">
+                        <entry value="Other" key="Name" />
+                        <entry value="READ_ONLY" key="ReadOnly" />
+                    </node>
+                </path>
+                <path value="test:type:Label">
+                    <node name="Info">
+                        <entry value="Test" key="Name" />
+                        <entry value="READ_ONLY" key="ReadOnly" />
+                    </node>
+                </path>
+            </path>
+        </path>
+        <path value="Root:type:EntryPoints">
+            <path value="5377b067-bbc1-47bb-afc1-e7b2c65d0466:type:EntryPoint">
+                <node name="Info">
+                    <entry value="Scripts/StartCR.m" key="File" />
+                    <entry value="" key="Icon" />
+                    <entry value="StartCR" key="Name" />
+                    <entry value="StartUp" key="Type" />
+                    <entry value="0" key="Visible" />
+                </node>
+            </path>
+            <path value="ab63b012-135c-4fba-b591-4b19a0183a85:type:EntryPoint">
+                <node name="Info">
+                    <entry value="System/CRReferenceApplication.slx" key="File" />
+                    <entry value="" key="Icon" />
+                    <entry value="CRReferenceApplication" key="Name" />
+                    <entry value="Basic" key="Type" />
+                    <entry value="1" key="Visible" />
+                </node>
+            </path>
+            <path value="d24495a3-f168-4125-a950-fe1267bae1e3:type:EntryPoint">
+                <node name="Info">
+                    <entry value="Scripts/CloseCR.m" key="File" />
+                    <entry value="" key="Icon" />
+                    <entry value="CloseCR" key="Name" />
+                    <entry value="Shutdown" key="Type" />
+                    <entry value="0" key="Visible" />
+                </node>
+            </path>
+        </path>
+        <path value="Root:type:Files">
+            <path value="Scripts:type:File">
+                <node name="Info" />
+                <path value="1:type:DIR_SIGNIFIER">
+                    <node name="Info" />
+                </path>
+                <path value="CloseCR.m:type:File">
+                    <node name="Info">
+                        <node name="Category">
+                            <entry value="FileClassCategory" key="UUID" />
+                            <node name="Label">
+                                <entry value="design" key="UUID" />
+                            </node>
+                        </node>
+                    </node>
+                </path>
+                <path value="StartCR.m:type:File">
+                    <node name="Info">
+                        <node name="Category">
+                            <entry value="FileClassCategory" key="UUID" />
+                            <node name="Label">
+                                <entry value="design" key="UUID" />
+                            </node>
+                        </node>
+                    </node>
+                </path>
+                <path value="vdynblks3Dsceneconfig.m:type:File">
+                    <node name="Info">
+                        <node name="Category">
+                            <entry value="FileClassCategory" key="UUID" />
+                            <node name="Label">
+                                <entry value="design" key="UUID" />
+                            </node>
+                        </node>
+                    </node>
+                </path>
+                <path value="vdynblksdrvrconfig.m:type:File">
+                    <node name="Info">
+                        <node name="Category">
+                            <entry value="FileClassCategory" key="UUID" />
+                            <node name="Label">
+                                <entry value="design" key="UUID" />
+                            </node>
+                        </node>
+                    </node>
+                </path>
+                <path value="vdynblksmdlWSconfig.m:type:File">
+                    <node name="Info">
+                        <node name="Category">
+                            <entry value="FileClassCategory" key="UUID" />
+                            <node name="Label">
+                                <entry value="design" key="UUID" />
+                            </node>
+                        </node>
+                    </node>
+                </path>
+                <path value="vdynblksrefconfig.m:type:File">
+                    <node name="Info">
+                        <node name="Category">
+                            <entry value="FileClassCategory" key="UUID" />
+                            <node name="Label">
+                                <entry value="design" key="UUID" />
+                            </node>
+                        </node>
+                    </node>
+                </path>
+            </path>
+            <path value="System:type:File">
+                <node name="Info" />
+                <path value="1:type:DIR_SIGNIFIER">
+                    <node name="Info" />
+                </path>
+                <path value="CRReferenceApplication.slx:type:File">
+                    <node name="Info">
+                        <node name="Category">
+                            <entry value="FileClassCategory" key="UUID" />
+                            <node name="Label">
+                                <entry value="design" key="UUID" />
+                            </node>
+                        </node>
+                    </node>
+                </path>
+            </path>
+            <path value="Work:type:File">
+                <node name="Info" />
+                <path value="1:type:DIR_SIGNIFIER">
+                    <node name="Info" />
+                </path>
+            </path>
+        </path>
+        <path value="Root:type:ProjectPath">
+            <path value="29154b2b-f863-41f3-8e5b-a53e5fa973ff:type:Reference">
+                <node name="Info">
+                    <entry value="System" key="Ref" />
+                    <entry value="Relative" key="Type" />
+                </node>
+            </path>
+            <path value="aec05c7e-ceb6-40c0-a036-0f99bccdb80d:type:Reference">
+                <node name="Info">
+                    <entry value="Scripts" key="Ref" />
+                    <entry value="Relative" key="Type" />
+                </node>
+            </path>
+        </path>
+        <path value="Root:type:References">
+            <path value="34b7a37d-4448-4cc9-b0fe-99aec15a439b:type:Reference">
+                <node name="Info">
+                    <entry value="../refs/PassVeh14DOF" key="Ref" />
+                    <entry value="Relative" key="Type" />
+                </node>
+            </path>
+            <path value="53ad2fe0-9936-48ca-8508-5c0255941ef6:type:Reference">
+                <node name="Info">
+                    <entry value="../refs/Driveline" key="Ref" />
+                    <entry value="Relative" key="Type" />
+                </node>
+            </path>
+            <path value="5460ff43-8871-45ab-917f-7c4fb7cac348:type:Reference">
+                <node name="Info">
+                    <entry value="../refs/PassVeh7DOF" key="Ref" />
+                    <entry value="Relative" key="Type" />
+                </node>
+            </path>
+            <path value="8b6d1742-bf71-487f-b2e2-37cf0ab70b5f:type:Reference">
+                <node name="Info">
+                    <entry value="../refs/Common" key="Ref" />
+                    <entry value="Relative" key="Type" />
+                </node>
+            </path>
+            <path value="c558cf18-3420-4b28-a668-4b84b15477ee:type:Reference">
+                <node name="Info">
+                    <entry value="../refs/SI" key="Ref" />
+                    <entry value="Relative" key="Type" />
+                </node>
+            </path>
+        </path>
+    </MetadataNode>
+    <Files>
+        <File path="ConstRadius.prj" value="c4d5cdc8" />
+        <File path="Scripts/CloseCR.m" value="8ca210e9" />
+        <File path="Scripts/StartCR.m" value="dcc32a8" />
+        <File path="Scripts/vdynblks3Dsceneconfig.m" value="8bd721d6" />
+        <File path="Scripts/vdynblksdrvrconfig.m" value="d2082378" />
+        <File path="Scripts/vdynblksmdlWSconfig.m" value="badd997e" />
+        <File path="Scripts/vdynblksrefconfig.m" value="f90b73b3" />
+        <File path="Scripts" value="-1" />
+        <File path="System/CRReferenceApplication.slx" value="94ac1127" />
+        <File path="System/ISO15037_1_2006E.mldatx" value="889ddebe" />
+        <File path="System" value="-1" />
+        <File path="Work" value="-1" />
+        <File path="resources/project/Project.xml" value="c576b26a" />
+        <File path="resources/project/ProjectData.type.Info.xml" value="38f2a143" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category.xml" value="d2dc6b71" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category/artifact.type.Label.xml" value="3a808e07" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category/convenience.type.Label.xml" value="9fa19c1e" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category/derived.type.Label.xml" value="b32f4cc5" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category/design.type.Label.xml" value="657f94e3" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category/none.type.Label.xml" value="4434695f" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category/other.type.Label.xml" value="7716e543" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category/test.type.Label.xml" value="eff7b485" />
+        <File path="resources/project/Root.type.Categories/FileClassCategory.type.Category" value="-1" />
+        <File path="resources/project/Root.type.Categories" value="-1" />
+        <File path="resources/project/Root.type.EntryPoints/5377b067-bbc1-47bb-afc1-e7b2c65d0466.type.EntryPoint.xml" value="a37e7233" />
+        <File path="resources/project/Root.type.EntryPoints/ab63b012-135c-4fba-b591-4b19a0183a85.type.EntryPoint.xml" value="4911e27f" />
+        <File path="resources/project/Root.type.EntryPoints/d24495a3-f168-4125-a950-fe1267bae1e3.type.EntryPoint.xml" value="bf32f16c" />
+        <File path="resources/project/Root.type.EntryPoints" value="-1" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File.xml" value="3af507e" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File/1.type.DIR_SIGNIFIER.xml" value="3af507e" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File/CloseCR.m.type.File.xml" value="df0217e1" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File/StartCR.m.type.File.xml" value="df0217e1" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File/vdynblks3Dsceneconfig.m.type.File.xml" value="df0217e1" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File/vdynblksdrvrconfig.m.type.File.xml" value="df0217e1" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File/vdynblksmdlWSconfig.m.type.File.xml" value="df0217e1" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File/vdynblksrefconfig.m.type.File.xml" value="df0217e1" />
+        <File path="resources/project/Root.type.Files/Scripts.type.File" value="-1" />
+        <File path="resources/project/Root.type.Files/System.type.File.xml" value="3af507e" />
+        <File path="resources/project/Root.type.Files/System.type.File/1.type.DIR_SIGNIFIER.xml" value="3af507e" />
+        <File path="resources/project/Root.type.Files/System.type.File/CRReferenceApplication.slx.type.File.xml" value="df0217e1" />
+        <File path="resources/project/Root.type.Files/System.type.File" value="-1" />
+        <File path="resources/project/Root.type.Files/Work.type.File.xml" value="3af507e" />
+        <File path="resources/project/Root.type.Files/Work.type.File/1.type.DIR_SIGNIFIER.xml" value="3af507e" />
+        <File path="resources/project/Root.type.Files/Work.type.File" value="-1" />
+        <File path="resources/project/Root.type.Files" value="-1" />
+        <File path="resources/project/Root.type.ProjectPath/29154b2b-f863-41f3-8e5b-a53e5fa973ff.type.Reference.xml" value="39d4cefe" />
+        <File path="resources/project/Root.type.ProjectPath/aec05c7e-ceb6-40c0-a036-0f99bccdb80d.type.Reference.xml" value="de511e4e" />
+        <File path="resources/project/Root.type.ProjectPath" value="-1" />
+        <File path="resources/project/Root.type.References/34b7a37d-4448-4cc9-b0fe-99aec15a439b.type.Reference.xml" value="e01284b7" />
+        <File path="resources/project/Root.type.References/53ad2fe0-9936-48ca-8508-5c0255941ef6.type.Reference.xml" value="368631d8" />
+        <File path="resources/project/Root.type.References/5460ff43-8871-45ab-917f-7c4fb7cac348.type.Reference.xml" value="a5f35b3f" />
+        <File path="resources/project/Root.type.References/8b6d1742-bf71-487f-b2e2-37cf0ab70b5f.type.Reference.xml" value="43a0aa27" />
+        <File path="resources/project/Root.type.References/c558cf18-3420-4b28-a668-4b84b15477ee.type.Reference.xml" value="267c5c58" />
+        <File path="resources/project/Root.type.References" value="-1" />
+        <File path="resources/project/uuid-2798577c-1cab-4b5f-af9f-ac37f881e7bd.xml" value="3af507e" />
+        <File path="resources/project" value="-1" />
+        <File path="resources" value="-1" />
+    </Files>
+    <Date value="2 maggio 2020 15.48.28" />
+</Info>
