@@ -1,4 +1,4 @@
-function Klqr = LinPlant(deltaf, V0)
+function res = LinPlant(deltaf, V0)
 
 global m rho S g rxf rxr ryf rx ry rz r Iz
 global Cx0 Cyb CR rk
@@ -12,8 +12,8 @@ rad2deg = 180/pi; % Radians to Degrees Coeff.
 psi0 = 0;
 x0 = 0;
 y0 = 0;
-%deltaf = deg2rad * 30;
-deltar = 0;
+deltaf = deg2rad * deltaf;
+deltar = 5;
 betaU0 = 0;
 omegaZ0 = 0;
 
@@ -43,15 +43,14 @@ muL0 = 0;
 for j = 1:4
     muL0 = muL0 + Partial_mu_long(j,0);
 end
-muL0 = muL0/4;
-muS = 0;
+muL0 = muL0/4
+muS = muL0;
 
 r = 0.28;       % Wheel Radius [m]
 CR = -0.05;     % Rolling Resistance
 Iz = 1200*(rxr^2+ryf^2)^2;  % Z Axis Inertial Matrix
 
-%V0 = 80/3.6;
-V0max = 80/3.6;
+V0 = V0/3.6;
 
 Fwz = m*g/4;
 Fwx = 4*(Fwz*muL0+Fwz*CR);
@@ -68,41 +67,45 @@ a11 = (1/(m*V0))*(-cos(betaU0)*Fwx-sin(betaU0)*Fwy);
 a12 = -1;
 a21 = -V0/Iz*(2*Fwz*muL0*(rxf+rxr)/V0);
 a22 = -1/Iz*(2*Fwz*muL0*(2*(rxf^2 + ryf^2)+2*(rxr^2+ryf^2))/V0);
+a31 = 1/(m*V0)*(-sin(betaU0)*dFwxdf+cos(betaU0)*dFwydf);
+a32 = 1/Iz*(2*CR*Fwz*(rxr)+2*Fwz*muL0*8/7*(rxr));
 
-A = [a11 a12; a21 a22];
+A = [a11 a12 0; a21 a22 0; a31 a32 1];
 eig(A)
 
-b111 = -Fwx/(m*V0);
+b111 = 1/(m*V0)*(-sin(betaU0)*dFwxdr+cos(betaU0)*dFwydr);
 b112 = 1/Iz*(2*CR*Fwz*(rxf)+2*Fwz*muL0*8/7*(rxf));
-B1 = [b111; b112];
+B1 = [b111; b112; 0];
 
-R = [B1 A*B1];
-if rank(R) == 2
+Reachable = [B1 A*B1 A^2*B1];
+if rank(Reachable) == 3
     disp('La matrice è raggiungibile!')
 end 
 
-b211 = -Fwx/(m*V0);
+b211 = 1/(m*V0)*(-sin(betaU0)*dFwxdf+cos(betaU0)*dFwydf);
 b212 = 1/Iz*(2*CR*Fwz*(rxr)+2*Fwz*muL0*8/7*(rxr));
 B2 = [b211; b212];
 
-C = [1 0; 0 1];
+C = [1 0 0; 0 1 0; 0 0 1];
 DA = [0 0; 0 0];
-D = [0 ; 0];
+D = [0 ; 0; 0];
 
-xeq = (A)^-1*[-B1*deltar -B2*deltaf]
+xeq = (A)^-1*[-B1*deltar]
 
 %Q = inv(2*diag([(0.2/180*pi)^2 (1/180*pi)^2]));  % MAX 1/||x||
 %R = inv(4*eye(1)*(40*(2*pi)/60)^2);              % MAX 1/||u||
-Q = inv([0.1 0; 0 0.05]);
+Q = inv([0.1 0 0; 0 0.05 0; 0 0 100]);
 R = inv([0.035]);
-sysA = ss(A, [B1, B2], C, DA);
-sysA.StateName = ["betaU","omegaZ"];
-sysA.InputName = ["deltar","deltaf"];
+%sysA = ss(A, [B1, B2], C, DA);
+%sysA.StateName = ["betaU","omegaZ"];
+%sysA.InputName = ["deltar","deltaf"];
 
 sys = ss(A, B1, C, D);
-sys.StateName = ["betaU","omegaZ"];
+sys.StateName = ["betaU","omegaZ","deltaF"];
 sys.InputName = ["deltar"];
 
 [Klqr, s, e] = lqr(sys, Q, R, 0);
-%deltaR = - Klqr*[betaU - xeq(1,2); omegaZ - xeq(2,2)];
-ESEMPIO = rad2deg*(-Klqr * [0.1047 - xeq(1,1); 0.15 - xeq(1,2)])
+Klqr = Klqr';
+res = [Klqr xeq];
+%deltaR = - Klqr*[betaU - xeq(1,1); omegaZ - xeq(1,2); deltaf - xeq(1,3)];
+%ESEMPIO = rad2deg*(-Klqr * [0.1047 - xeq(1,1); 0.15 - xeq(1,2); deltaf - xeq(1,3)])
