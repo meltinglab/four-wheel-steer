@@ -11,6 +11,7 @@
 \usepackage{amscd}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{version}
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{graphicx,color,listings}
 \usepackage{hologo}
@@ -31,7 +32,10 @@
 \begin{document}
 	\tableofcontents
 \chapter{Introduction}
-	Nowadays, many urban car manufactures are implementing the four-wheel steering system control on board.
+	Nowadays, many urban car manufactures are implementing the four-wheel steering system control on board. In this new vehicle generation, not only the front wheels are steerable but also the rear ones can be steered too. As a conseguence, the sistem will be characterized by a higher number of controlling inputs under equal number of states. This situation increases the maneuverability of the vehicle itself and provides the possibility of optimization or constraint satisfaction during the vehicle transfer between two definite boundaries.\\
+	In this paper, we are going to present the kinetic and kinematic modeling of a four-wheel steering vehicle. Moreover, we will show our design procedure about the car optimal controller by means of the Linear Quadratic Regulator (LQR). The correctness of modeling and efficiency of the designed optimal controller is verified by the aid of a specific simulator we chose.
+	
+	(da finire)...
 \chapter{System Linearization}
 	In this section we are going to describe the procedure we adopted in order to get the Linearized System. We will show our initial approximations and the main step we took, starting from the Non-Linear system equations up to the final equilibrium points. 
 \section{Initial Approximations} \label{approx}	
@@ -47,7 +51,7 @@
 			\begin{equation}
 				\beta_{u} = \chi - \psi
 			\end{equation}
-			Derivating the previous equation with respect to time we finally obtained the following one:
+			Derivating the previous equation with respect to time we finally obtained the following statement:
 			\begin{equation} \label{Betaudot}
 				\dot{\beta}_{u} = \dot\chi - \dot\psi = 
 				\begin{bmatrix}
@@ -66,8 +70,8 @@
 			\end{equation}
 		The equations \ref{Betaudot} and \ref{omegazdot} represent, respectively, the 1st and the 2nd equations of the Non-Linear System.
 \section{Linearization Parameters} 
-	With the aim of achieve the proper linearized system for our model, we have analyzed the most critical variables affecting the vehicle itself. As a matter o facts, the overall system behaviour is influenced by many parameters, such as vehicle speed ($V_{OB}$), steering angle of the front wheels ($\delta_{wf}$), the $\beta_{u}$ angle, and so on. \\
-	In order to meet our final purpose, we fixed the following parameters as the reference ones:\\
+	With the aim of achieve the proper linearized system for our model, we have analyzed the most critical variables affecting the vehicle itself. As a matter o facts, the overall system behaviour is influenced by many parameters, such as vehicle speed ($V_{OB}$), steering angle of both the front ($\delta_{wf}$) and rear ($\delta_{wr}$) wheels , the $\beta_{u}$ angle, and so on. \\
+	In order to meet our final purpose, we fixed the following parameters as the reference ones for the linearization process:\\
 		\begin{equation*}
 			\tilde{x} =
 			\begin{bmatrix}
@@ -80,17 +84,19 @@
 			\delta_{wr}^{B} 
 			\end{bmatrix} = control \ variables
 		\end{equation*}\quad
-		\begin{equation*} 
-			\tilde{d} =
-			\begin{bmatrix}
-			\delta_{wf}^{B} 
-			\end{bmatrix} = disturbance \ variables
-		\end{equation*}
 		\begin{center}
 			$ y = output \ variable $	
 		\end{center}
+			\begin{comment}
+			\begin{equation*} 
+				\tilde{d} =
+				\begin{bmatrix}
+				\delta_{wf}^{B} 
+				\end{bmatrix} = disturbance \ variables
+			\end{equation*}
+			\end{comment}
 \section{Linearization Point} 
-	We chose to linearized our 4-steering wheels control system around a straight trajectory of the vehicle. Doing so, we will accept even all those conditions which differ in a way from the previous one. In order to achieve this result, we fixed the following linearization point:
+	We chose to linearized our four-wheel steering control system around a straight trajectory of the vehicle. Doing so, we will accept even all those conditions which differ in a way from the previous one. In order to achieve this result, we fixed the following linearization point:
 		\begin{equation*}
 			\begin{cases}
 				\beta_{u} = \omega_{z} = 0
@@ -108,7 +114,7 @@
 			\begin{cases}
 				x = x_{0} + \tilde{x} \\
 				u = u_{0} + \tilde{u} \\
-				d = d_{0} + \tilde{d} \\
+				%d = d_{0} + \tilde{d} \\
 			\end{cases}
 		\end{equation*}
 	Than, if we simply compute the equivalent time-derivative of each statement, we get:
@@ -116,16 +122,16 @@
 			\begin{cases}
 				\dot{x} = \dot{x_{0}} + \dot{\tilde{x}} \\
 				\dot{u} = \dot{u_{0}} + \dot{\tilde{u}} \\
-				\dot{d} = \dot{d_{0}} + \dot{\tilde{d}} \\
+				%\dot{d} = \dot{d_{0}} + \dot{\tilde{d}} \\
 			\end{cases}
 		\end{equation*}
 	Let's compute the \textit{states} relation.\\
 	Due to our linearization point, we can rightly say $x_{0} = 0 $, so its time derivative becomes zero as well.
 		\begin{equation} \label{matrices structure}
 			\begin{split}
-				\dot{x}  = \dot{\tilde{x}} &= f(x_{0}+\tilde{x},u_{0}+\tilde{u},d_{0} + \tilde{d}) \approx \\
-				&\approx f(x_{0}+u_{0}+d_{0}) + \frac{\partial f}{\partial x} |_{(x_{0},u_{0},d_{0})} \tilde{x} + \frac{\partial f}{\partial u} |_{(x_{0},u_{0},d_{0})} \tilde{u} + \frac{\partial f}{\partial d} |_{(x_{0},u_{0},d_{0})} \tilde{d} = \\
-				&= 0 + A \tilde{x} + B_{1} \tilde{u} + B_{2} \tilde{d}
+				\dot{x}  = \dot{\tilde{x}} &= f(x_{0}+\tilde{x},u_{0}+\tilde{u})\approx \\
+				&\approx f(x_{0}+u_{0}) + \frac{\partial f}{\partial x} |_{(x_{0},u_{0})} \tilde{x} + \frac{\partial f}{\partial u} |_{(x_{0},u_{0})} \tilde{u} = \\
+				&= 0 + A \tilde{x} + B_{1} \tilde{u} 
 			\end{split}
 		\end{equation}
 	Finally, from the equation \ref{matrices structure}, we obtained the origin of each matrix of our system. Inside the next paragraph we are going to elaborate all the partial derivatives within the equation \ref{matrices structure} in order to find each element for all the matrices.
@@ -133,7 +139,7 @@
 	Let's begin showing the final Linear Time-Invariant System we got:
 		\begin{equation} \label{LTI}
 			\begin{cases}
-				\dot{\tilde{x}} = A \tilde{x} + B_{1}\tilde{u} + B_{2}\tilde{d} \\
+				\dot{\tilde{x}} = A \tilde{x} + B_{1}\tilde{u} \\
 				y = C\tilde{x} 
 			\end{cases}
 		\end{equation}
@@ -323,6 +329,7 @@
 				\frac{\partial F_{wy}^{B}}{\partial \delta_{wf}} &= 2 [\frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} \mu_{S} \sin \delta_{wr} + \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} (\mu_{L}+C_{R}) \cos\delta_{wr} + \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} \mu_{S} \sin \delta_{wf}+ \\ &+ \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} (\mu_{L}+C_{R})\cos\delta_{wf} - F_{wz}^{W} (\mu_{L}+C_{R}) \sin\delta_{wf}]
 			\end{split}
 		\end{equation}
+	\begin{comment}
 	\subsection{Matrix $B_{2}$}
 	Considering that our \textit{disturbance} variable ($\delta_{wf}$) is always a steering angle as the \textit{control} one ($\delta_{wr}$), the processing phase of Matrix $B_{2}$ was exactly the same as the Matrix $B_{1}$ one. \\ The final result is reported down here:
 		\begin{equation}
@@ -337,6 +344,7 @@
 			\end{bmatrix}
 		\end{equation}
 	For the elaboration of all the partial derivatives above, refer to subsection \ref{B1}.
+	\end{comment}
 	\subsection{Matrix C}
 	The choice of matrix C was dictated by the math relationship among the x-variable (\textit{states}) and the y-one (\textit{output}) of the system \ref{LTI}, pag. \pageref{LTI}. With the aim of simplifying our system model, we chose the \textit{Identity} matrix to connect these system variables together. \\ In our case, according to both x and y-matrix sizes, we have obtained a matrix C $\in M_{2X2}$.
 		\begin{equation}
@@ -346,12 +354,14 @@
 			0 & 1
 		\end{bmatrix}
 		\end{equation}
-		
-\chapter{Analysis System Reachability}
+\chapter{System Analysis: Stability, Observability and Reachability}
 	Within the current chapter, we are going to describe how we analyzed our system in terms of both observability and reachability. In particular, we will firstly show how we proved the system stability and, finally, we will exhibit the equilibium points we got.
 \section{System Stability} 
-	From the theory, it is possible to define "stable" a Linear Time Invariant (LTI) system IF ONLY the eigenvalues 
-		\begin{equation}
+	From the theory, it is possible to define "stable" a Linear Time Invariant (LTI) system IF ONLY the eigenvalues of matrix A are strictly negative.
+\section{System Reachability}
+\section{Equilibrium Points}
+	With the purpose of getting the equilibrium points of both $\beta_{u}$ and $\omega_{z}$, we have imposed the following condition to our LTI system:
+		\begin{equation} \label{Equilibrium condition}
 			\begin{bmatrix}
 				\dot{\tilde{\beta_{u}}} \\
 				\dot{\tilde{\omega_{z}}}
@@ -366,16 +376,48 @@
 			\end{bmatrix} 
 			B_{1}[\tilde{\delta_{wr}}] B_{2}[\tilde{\delta_{wf}}]
 		\end{equation}
-	The final equilibrium points are given by the following statement:
-		\begin{equation}
+	The equation \ref{Equilibrium condition} is directly given by the "equilibrium point" definition: \textit{to be considered an equilibrium poit, the current parameter must have a zero time derivative}. If the matrix A is invertible, we can write the following statement:
+		\begin{equation} \label{eq points}
 			\begin{bmatrix}
 				\tilde{\beta_{uEQ}} \\
 				\tilde{\omega_{zEQ}}
 			\end{bmatrix} = 
 			A^{-1}[-B_{1} \tilde\delta_{wr} - B_{2} \tilde\delta_{wf}]
 		\end{equation}
+	From the equation \ref{eq points} we got our equilibrium points, $\beta_{uEQ}$ and $\omega_{zEQ}$.
 \chapter{Optimal Control Design}
+	Inside this chapter, we are going to show the control system we designed for our application. This phase has been the most complex one for different reasons. Generally speaking, the design of a specific control law for each physical system depends by many factors, having different levels of influence. For this reason, we tried to design the best possible control law by considering more the most important elements and neglecting and/or minimizing the ones with a low impact. As a conseguence, this step required us lots of time to be fully accomplished.\\
+	First of all, we described our vehicle model through the Matlab Software. We have both provided its physical description and initialized all those variables able to influence its behcaviour. Than we thought about the model simulator in order to have the simulation environment inside with test our changes. Moreover, with the aim of controlling the steering angle of the rear wheels, we dsigned the optimal control law for our system. Finally, we merged the simulator and the control low together in Simulink. \\
+	The next sections will contain a more accurated description of those step we just introduced.
+\section{Vehicle Model design}
+	It was the first step of the entire procedure we realized. The current section was purely related to achieve a real vehicle model, characterized by all the  parameters needed to simulate and analyze the car behaviour. As a matter of facts, we have to remember that our goal was to control the vehicle working conditions by means of the rear steering angle actuation. We could reach the previous purpose only with a real representation of the vehicle itself, made up of its main technical and physical parameters.\\
+	We have implemented such a model on Matlab, describing the automobile features inside a live script. Firstly, we have initialized all the control variables needed for the following computations. Than, we fixed some vehicle's physical parameters, such as mass, wheels position with respect to centre of gravity of the car, and so on. At the end of current section, there will be an extract from our Matlab model.
+		\begin{figure} %\label{key}
+			\centering
+	%		\includegraphics[scale=0.5,width=0.25\textheight]{NOME}
+	%		\caption{text}
+		\end{figure}
+\section{Vehicle Simulator}
 
+\section{Control Law design}
+	This step was the most critical one because of its close correlation with the project purpose itself. Our starting object was to develop a control law ables to act over the steering angle of the rear wheels, $\delta_{wr}$. There will follow a step-by-step description of our procedure.
+	\subsection{Cost Function $J$ Analysis}
+		Starting from the theory, we studied the real meaning of "Cost Function" and its elements. The function's goal is to design a control system, $u$, ables to minimize the function $J$ itself. In a nutshell, if a certain condition is strongly desired, we have to associate to it a low cost, and viceversa. \\
+		There follow the linear quadratic form of the cost function $J$ for a general LTI system:
+			\begin{equation}
+				J = x^{T}(t_{f}) S_{f} x(t_{f})\int_{t_{0}}^{t_{f}} e^{T} Q e + u^{T} R u \ dt
+			\end{equation}
+		where:
+			\begin{itemize}
+				\item $e$ represents a linear combination of \textit{states} x;
+				\item $u$ represents the control law;
+				\item $ [t_{0},t_{f}] $ represents the time spain in which we evaluated our cost function J;
+				\item $ S_{f} = S_{f}^{T} \geq0 $ represents the cost associated to the state once it is evaluated in $t=t_{f}$, so "how much far i am from the origin";
+				\item $ Q=Q^{T}\geq 0 $ and $ R=R^{T}\geq 0 $ represent, respectively, the costs for having $e\neq0$ and $u\neq0$, during the time span.
+			\end{itemize}
+	\subsection{Q and R Matrices}
+		We could reach our final goal, in terms of meaningful imposed rear steering angle, through the "tuning" process of matrices $Q$ and $R$. For what concern the matrix $S$, we set it equal to zero ..?..	
+		
 \chapter{Final Results}
 
 \end{document}
