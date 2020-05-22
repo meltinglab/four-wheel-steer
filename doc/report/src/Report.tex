@@ -9,6 +9,7 @@
 \usepackage{fancyhdr}
 \usepackage{amsmath,amssymb}
 \usepackage{amscd}
+\usepackage{graphicx}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage{version}
@@ -33,9 +34,8 @@
 	\tableofcontents
 \chapter{Introduction}
 	Nowadays, many urban car manufactures are implementing the four-wheel steering system control on board. In this new vehicle generation, not only the front wheels are steerable but also the rear ones can be steered too. As a conseguence, the sistem will be characterized by a higher number of controlling inputs under equal number of states. This situation increases the maneuverability of the vehicle itself and provides the possibility of optimization or constraint satisfaction during the vehicle transfer between two definite boundaries.\\
-	In this paper, we are going to present the kinetic and kinematic modeling of a four-wheel steering vehicle. Moreover, we will show our design procedure about the car optimal controller by means of the Linear Quadratic Regulator (LQR). The correctness of modeling and efficiency of the designed optimal controller is verified by the aid of a specific simulator we chose.
-	
-	(da finire)...
+	In this paper, we are going to present the kinetic and kinematic modeling of a four-wheel steering vehicle. Moreover, we will show our design procedure about the car optimal controller by means of the Linear Quadratic Regulator (LQR). The correctness of modeling and efficiency of the designed optimal controller is verified by the aid of a specific simulator we chose.\\
+	The objective is to create a portable control that could be integrate in any vehicle and could work independently from the rest of the control systems of the vehicle, just getting as input the state of the vehicle and managing the steering angle of the rear wheels by itself.
 \chapter{System Linearization}
 	In this section we are going to describe the procedure we adopted in order to get the Linearized System. We will show our initial approximations and the main step we took, starting from the Non-Linear system equations up to the final equilibrium points. 
 \section{Initial Approximations} \label{approx}	
@@ -397,8 +397,6 @@
 	%		\includegraphics[scale=0.5,width=0.25\textheight]{NOME}
 	%		\caption{text}
 		\end{figure}
-\section{Vehicle Simulator}
-
 \section{Control Law design}
 	This step was the most critical one because of its close correlation with the project purpose itself. Our starting object was to develop a control law ables to act over the steering angle of the rear wheels, $\delta_{wr}$. There will follow a step-by-step description of our procedure.
 	\subsection{Cost Function $J$ Analysis}
@@ -417,7 +415,28 @@
 			\end{itemize}
 	\subsection{Q and R Matrices}
 		We could reach our final goal, in terms of meaningful imposed rear steering angle, through the "tuning" process of matrices $Q$ and $R$. For what concern the matrix $S$, we set it equal to zero ..?..	
-		
+	\subsection{K multiplier}
+		Following the theory of optimal control we should extract one single K matrix around the linearization point. This made our working condition very limited, because in choosing a linearization point we would have to choose one single steering angle and angular velocity, thus restricting the range of validity of our system around a certain kind of curve, that initially was as specific as a straight trajectory ($\omega_{z}=0$).
+		This reason lead us towards the consideration of extracting not one matrix for K, but a whole range of values, based on two inputs from the driver:
+\begin{itemize}
+	\item front steering angle $\delta_{wf}$
+	\item speed $V_0$
+\end{itemize}	
+		This extraction is not done in real time, due to the relatively high computational load of performing an LQR algorithm, it is instead done only once at the startup of the system (now that we are in prototypation phase, later on it will only be performed once and for all). After this initial computations made at some discrete linearization points, the results will be stored in lookup tables, at runtime the only workload for the microcontroller will be to take as input the actual state of the machine, specifically the two input parameters written in the bullet list here above and perform matrix multiplcation as usual.//
+		Obviously, given the discrete nature of the lookup table, it will not be possible to have a perfect match for the actual disturbances of the vehicle that span across a continuous space, so we will have to approximate to the nearest point of linearization. It will be anyway a better approximated solution with respect to a system with a single linearization point and a single K.//
+		Another reason why we have devoted one script for the extraction of K matrices and another one for the computation of realtime control is that you can't generate C code using matlab coder or even a simulink block with Matlab code containing the lqr algorhytm present in the control system toolbox. We needed to keep it separate.
+\chapter{Vehicle Simulator}
+	In order to have the most realistic simulation possible, we decided not to design our own discrete time non -linear simulator, instead we utilize a Matlab toolbox called "vehicle dynamics" and integrate it into our project. It is a Simulink based toolbox that has some useful blocks for every vehicle control system (like ESP and cruise control) and for simulations of parts of the vehicle (like engine, suspensions and transmission). 
+	It has been particularly useful also because it offered already pre-built reference applications, for constant radius steering, double lane change and similar situations, coupled with a system of scopes that allowed us to visualize the data that we needed. We built our application starting from the constant radius steering, adding our control system for the rear wheels together with the other controls.
+	\paragraph{Driver inputs simulation}
+	The Vehicle Dynamics blockset also offers a block called "predictive driver" that, given a reference trajectory, tries to maintain it acting on the accelerator pedal or on the steering wheel. After some trials we verified that it was not designed with the knowledge of steerable rear wheels, thus leading to instability of its prediction system, we had to disable it and bypass it, giving directly a fixed front steer angle $\delta_{wf}$ and speed.
+	\paragraph{Graphic engine}
+	This blockset also includes a graphic tool, in order to view in a 3D environment the movements of the vehicle, it can be enabled or disabled based on the graphics capabilities of the system on which the software is working on. This tool is based upon Unreal Engine.
 \chapter{Final Results}
-
+Per ora solamente mandala:\\
+\begin{figure}[!h]
+\centering
+\includegraphics[scale=0.2]{mandala1}
+\caption{Tipica traiettoria a mandala dovuta al predictive driver ignaro di tutto}
+\end{figure}
 \end{document}
