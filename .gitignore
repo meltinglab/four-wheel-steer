@@ -1,2 +1,6 @@
 # Exclude MATLAB build directories
 [Ww]ork/
+slprj/
+
+*.html
+*.r2019b
