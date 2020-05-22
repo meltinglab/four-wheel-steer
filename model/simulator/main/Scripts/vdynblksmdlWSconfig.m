@@ -1,3 +1,5 @@
+% Workspace configuration routine, including references to VEH workspace
+% with vehicle's physical parameters.
 function [varargout]= vdynblksmdlWSconfig(varargin)
 %   Copyright 2018 The MathWorks, Inc.
 block = varargin{1};
