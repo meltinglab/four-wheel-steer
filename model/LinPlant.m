@@ -15,7 +15,7 @@ y0 = 0;
 deltaf = deg2rad * deltaf;
 deltar = 0.1;
 betaU0 = 0;
-omegaZ0 = 0;
+%omegaZ0 = 0;
 
 % Parameters
 g = 9.81;       % Gravity Acceleration [m/s^2]
@@ -39,6 +39,7 @@ rz = -0.70;     % All Wheels Z Axis Offset (Height)
 rx = [rxf rxf rxr rxr];
 ry = [ryf -ryf -ryf ryf];
 
+omegaZ0 = (V0/(rxf-rxr))*tan(deltaf);
 muL0 = 0;
 for j = 1:4
     muL0 = muL0 + Partial_mu_long(j,0);
@@ -89,7 +90,7 @@ DA = [0 0; 0 0];
 D = [0 ; 0];
 
 xeq = (A)^-1*[-B1*deltar];
-
+xeq(1,2) = omegaZ0;
 %Q = inv(2*diag([(0.2/180*pi)^2 (1/180*pi)^2]));  % MAX 1/||x||
 %R = inv(4*eye(1)*(40*(2*pi)/60)^2);              % MAX 1/||u||
 Q = inv([0.1 0; 0 0.05]);
