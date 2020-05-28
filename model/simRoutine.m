@@ -1,10 +1,15 @@
-Lutscript;
-
 switchBlock = find_system('CRReferenceApplication', 'BlockType', 'Constant', 'Name', 'ActivateRearSteering');
-objparams = get_param(switchBlock{1}, 'ObjectParameters');
+%objparams = get_param(switchBlock{1}, 'ObjectParameters');
+
+% Extract vehicle's parameters structure VEH from workspace
+VEH = getVariable(get_param(bdroot('CRReferenceApplication'), 'modelworkspace'),'VEH');
+
+% Generate LUTs based on current vehicle parameters
+[Klut, Eqlut] = generateLUTs(VEH);
+
+% Simulate with Active Rear Steering
 set_param(switchBlock{1},'Value','1');
 save_system('CRReferenceApplication',[],'SaveDirtyReferencedModels','on');
-
 sim('CRReferenceApplication');
 
 deltaRRS = logsout.find('SteerRearCtrl');
@@ -15,6 +20,7 @@ betaURS = betaURS.Values.Data(:,1);
 omegaZRS = logsout.find('BodyAngleDerivatives');
 omegaZRS = omegaZRS.Values.Data(:,3);
 
+% Simulate plain vehicle
 set_param(switchBlock{1},'Value','0');
 save_system('CRReferenceApplication',[],'SaveDirtyReferencedModels','on');
 
