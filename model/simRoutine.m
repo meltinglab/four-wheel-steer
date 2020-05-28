@@ -7,6 +7,8 @@ VEH = getVariable(get_param(bdroot('CRReferenceApplication'), 'modelworkspace'),
 % Generate LUTs based on current vehicle parameters
 [Klut, Eqlut] = generateLUTs(VEH);
 
+rngRearSteer = (5/180)*pi;    % Rear steering range [rad]
+
 % Simulate with Active Rear Steering
 set_param(switchBlock{1},'Value','1');
 save_system('CRReferenceApplication',[],'SaveDirtyReferencedModels','on');

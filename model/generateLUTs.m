@@ -1,11 +1,14 @@
 function [Klut, Eqlut] = generateLUTs(vehicle)
 
+    global resAngle
+    global resSpeed
+    
     maxAngle = 30;  % [deg]
-    global resAngle = 3;   % [deg]
+    resAngle = 3;   % [deg]
     slotsAngle = 1 + maxAngle / resAngle;
 
     maxSpeed = 200; % [km/h]
-    global resSpeed = 10;  % [km/h]
+    resSpeed = 10;  % [km/h]
     slotsSpeed = maxSpeed / resSpeed;
 
     Klut = zeros(slotsAngle, slotsSpeed, 2);
