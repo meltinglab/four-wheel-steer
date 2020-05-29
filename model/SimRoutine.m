@@ -43,6 +43,11 @@ sim('CRReferenceApplication');
 deltaRRS = logsout.find('SteerRearCtrl');
 tRS = deltaRRS.Values.Time(:,1);
 deltaRRS = deltaRRS.Values.Data(:,1);
+betaREF = logsout.find('RefBeta');
+betaREF = betaREF.Values.Data(:,1);
+omegaZREF = logsout.find('RefOmgz');
+omegaZREF = omegaZREF.Values.Data(:,1);
+
 betaURS = logsout.find('BetaU');
 betaURS = betaURS.Values.Data(:,1);
 omegaZRS = logsout.find('OmegaZ');
@@ -53,14 +58,14 @@ omegaZRS = omegaZRS.Values.Data(:,1);
 RearSteeringVSOL = figure('Name','Rear Steering vs non Rear Steering','NumberTitle','off')
 
 subplot(2,2,1);
-plot(tRS,omegaZRS,'g',tOL, omegaZOL, 'r')
+plot(tRS,omegaZRS,'g',tOL, omegaZOL, 'r',tRS,omegaZREF,'c')
 title('OmegaZ Comparison')
-legend('RS','OL')
+legend('RS','OL','Ref')
 
 subplot(2,2,2);
-plot(tRS,betaURS,'g',tOL, betaUOL, 'r')
+plot(tRS,betaURS,'g',tOL, betaUOL, 'r', tRS, betaREF,'c')
 title('BetaU Comparison')
-legend('RS','OL')
+legend('RS','OL','Ref')
 
 subplot(2,2,[3,4]);
 plot(tRS, deltaRRS,'g',tOL, deltaROL, 'r')
