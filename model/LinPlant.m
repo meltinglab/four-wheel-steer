@@ -33,14 +33,13 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
 
     % Wheel displacements with respect to the Center of Mass
     rxf = vehicle.FrontAxlePositionfromCG;  % Front Wheels X Axis Offset (Length)
-    rxr = vehicle.RearAxlePositionfromCG;   % Rear Wheels X Axis Offset (Length)
+    rxr = -(vehicle.RearAxlePositionfromCG);   % Rear Wheels X Axis Offset (Length)
     ryf = 0.90;                             % All Wheels Y Axis Offset (Width)
-    rz = -(vehicle.HeightCG);                             % All Wheels Z Axis Offset (Height)
+    rz = -(vehicle.HeightCG);               % All Wheels Z Axis Offset (Height)
 
     rx = [rxf rxf rxr rxr];
     ry = [ryf -ryf -ryf ryf];
 
-    omegaZ0 = (V0/(rxf-rxr))*tan(deltaF);
     muL0 = 0;
     for j = 1:4
         muL0 = muL0 + Partial_mu_long(j,0);
@@ -91,11 +90,13 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     DA = [0 0; 0 0];
     D = [0 ; 0];
 
-    xeq = [0;0]
-    xeq = (A)^-1*[-B1*deltaR];
-    xeq
-    %xeq(1,2) = omegaZ0;
-    %xeq
+    xeq = [0;0];
+%    xeq = (A)^-1*[-B1*deltaR];
+    xeq = (A)^-1*[-B2*deltaF];
+
+    % Ideal turn Yaw Rate
+    omegaZack = (V0/(rxf-rxr))*tan(deltaF);
+    xeq(2,1) = omegaZack;
     
     %Q = inv(2*diag([(0.2/180*pi)^2 (1/180*pi)^2]));  % MAX 1/||x||
     %R = inv(4*eye(1)*(40*(2*pi)/60)^2);              % MAX 1/||u||
