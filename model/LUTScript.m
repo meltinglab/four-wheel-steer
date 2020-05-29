@@ -1,4 +1,4 @@
-function [Klut, Eqlut] = generateLUTs(vehicle)
+function [Klut, Eqlut] = LUTScript(vehicle)
 
     global resAngle
     global resSpeed
