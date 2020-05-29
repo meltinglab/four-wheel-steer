@@ -3,17 +3,26 @@ load_system('CRReferenceApplication');
 switchBlock = find_system('CRReferenceApplication', 'BlockType', 'Constant', 'Name', 'ActivateRearSteering');
 %objparams = get_param(switchBlock{1}, 'ObjectParameters');
 
+
+rngRearSteer = (5/180)*pi;    % Rear steering range [rad]
+
+maxAngle = 30;  % [deg]
+resAngle = 3;   % [deg]
+
+maxSpeed = 200; % [km/h]
+resSpeed = 10;  % [km/h]
+
+
 % Extract vehicle's parameters structure VEH from workspace
 VEH = getVariable(get_param(bdroot('CRReferenceApplication'), 'modelworkspace'),'VEH');
 
 % Generate LUTs based on current vehicle parameters
-[Klut, Eqlut] = LUTScript(VEH);
-
-rngRearSteer = (5/180)*pi;    % Rear steering range [rad]
+[Klut, Eqlut] = LUTScript(VEH, maxAngle, resAngle, maxSpeed, resSpeed);
 
 % Simulate with Active Rear Steering
 set_param(switchBlock{1},'Value','1');
 save_system('CRReferenceApplication',[],'SaveDirtyReferencedModels','on');
+
 sim('CRReferenceApplication');
 
 deltaRRS = logsout.find('SteerRearCtrl');

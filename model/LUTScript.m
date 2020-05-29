@@ -1,14 +1,6 @@
-function [Klut, Eqlut] = LUTScript(vehicle)
+function [Klut, Eqlut] = LUTScript(vehicle, maxAngle, resAngle, maxSpeed, resSpeed)
 
-    global resAngle
-    global resSpeed
-    
-    maxAngle = 30;  % [deg]
-    resAngle = 3;   % [deg]
     slotsAngle = 1 + maxAngle / resAngle;
-
-    maxSpeed = 200; % [km/h]
-    resSpeed = 10;  % [km/h]
     slotsSpeed = maxSpeed / resSpeed;
 
     Klut = zeros(slotsAngle, slotsSpeed, 2);
