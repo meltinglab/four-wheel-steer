@@ -92,7 +92,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
 
     xeq = [0;0];
 %    xeq = (A)^-1*[-B1*deltaR];
-    xeq = (A)^-1*[-B2*deltaF];
+    xeq = ((A)^-1)*[-B2*(deltaF)];
 
     % Ideal turn Yaw Rate
     omegaZack = (V0/(rxf-rxr))*tan(deltaF);
@@ -101,7 +101,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     %Q = inv(2*diag([(0.2/180*pi)^2 (1/180*pi)^2]));  % MAX 1/||x||
     %R = inv(4*eye(1)*(40*(2*pi)/60)^2);              % MAX 1/||u||
     Q = inv([0.1 0; 0 0.05]);
-    R = inv([5.035]);
+    R = inv([1.25]);
     %sysA = ss(A, [B1, B2], C, DA);
     %sysA.StateName = ["betaU","omegaZ"];
     %sysA.InputName = ["deltar","deltaf"];

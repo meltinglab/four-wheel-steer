@@ -33,6 +33,9 @@ betaUOL = logsout.find('BetaU');
 betaUOL = betaUOL.Values.Data(:,1);
 omegaZOL = logsout.find('OmegaZ');
 omegaZOL = omegaZOL.Values.Data(:,1);
+posXYZOL = logsout.find('PositionXYZ');
+posXOL = posXYZOL.Values.Data(:,2);
+posYOL = posXYZOL.Values.Data(:,1);
 
 % Simulate with Active Rear Steering
 set_param(switchBlock{1},'Value','1');
@@ -47,6 +50,9 @@ betaREF = logsout.find('RefBeta');
 betaREF = betaREF.Values.Data(:,1);
 omegaZREF = logsout.find('RefOmgz');
 omegaZREF = omegaZREF.Values.Data(:,1);
+posXYZRS = logsout.find('PositionXYZ');
+posXRS = posXYZRS.Values.Data(:,2);
+posYRS = posXYZRS.Values.Data(:,1);
 
 betaURS = logsout.find('BetaU');
 betaURS = betaURS.Values.Data(:,1);
@@ -71,3 +77,9 @@ subplot(2,2,[3,4]);
 plot(tRS, deltaRRS,'g',tOL, deltaROL, 'r')
 title('DeltaR Comparison')
 legend('RS','OL')
+
+TrajectoryComparison = figure('Name','Trajectory Comparison','NumberTitle','off')
+
+plot(posXRS,posYRS,'g', posXOL, posYOL, 'r');
+axis equal
+legend('RS','OL');
