@@ -6,11 +6,13 @@ switchBlock = find_system('CRReferenceApplication', 'BlockType', 'Constant', 'Na
 
 rngRearSteer = (5/180)*pi;    % Rear steering range [rad]
 
-maxAngle = 30;  % [deg]
-resAngle = 3;   % [deg]
+maxAngle = 30;                          % [deg]
+resAngle = 3;                           % [deg]
+thrAngle = ((resAngle*2)/100) * 10;     % [deg]  <- half sub-range*2 * [%]
 
-maxSpeed = 200; % [km/h]
-resSpeed = 10;  % [km/h]
+maxSpeed = 200;                         % [km/h]
+resSpeed = 10;                          % [km/h]
+thrSpeed = ((resSpeed*2)/100) * 10;     % [km/h] <- half sub-range*2 * [%]
 
 
 % Extract vehicle's parameters structure VEH from workspace
