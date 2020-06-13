@@ -27,14 +27,16 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     rk = 1;             % Road Type [1-6] (see Partial_mu_long.m)
     m = vehicle.Mass;   % Vehicle Mass [kg]
     r = 0.29;           % Tyre Radius [m]
-
+    CrRaw = 35000;      % Rear Cornering Stiffness (from Simulator)
+    CfRaw = 15000;      % Front Cornering Stiffness (from Simulator)
+    
     % Wheel Angles
     delta = [ deltaF deltaF deltaR deltaR ];
 
     % Wheel displacements with respect to the Center of Mass
     rxf = vehicle.FrontAxlePositionfromCG;  % Front Wheels X Axis Offset (Length)
     rxr = -(vehicle.RearAxlePositionfromCG);   % Rear Wheels X Axis Offset (Length)
-    ryf = 0.90;                             % All Wheels Y Axis Offset (Width)
+    ryf = vehicle.TrackWidth/2;                             % All Wheels Y Axis Offset (Width)
     rz = -(vehicle.HeightCG);               % All Wheels Z Axis Offset (Height)
 
     rx = [rxf rxf rxr rxr];
@@ -50,8 +52,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     r = 0.28;       % Wheel Radius [m]
     CR = -0.05;     % Rolling Resistance
 %    Iz = 1200*(rxr^2+ryf^2)^2;  % Z Axis Inertial Matrix
-    Iz = m*(rxr^2+ryf^2)^2;  % Z Axis Inertial Matrix
-
+    Iz = vehicle.YawMomentInertia;
     V0 = V0/3.6;
 
     Fwz = m*g/4;
@@ -86,22 +87,60 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     b212 = 1/Iz*(2*CR*Fwz*(rxr)+2*Fwz*muL0*8/7*(rxr));
     B2 = [b211; b212];
 
+    %Mimmo's interpretation
+    lf = sqrt(rxf^2+ryf^2);
+    lr = sqrt(rxr^2+ryf^2);
+    H = [ones(1,4); ry; -rx];
+    FzW = (H'/(H*H'))*([m*g; 0; 0]);
+
+    %Cf = muL0*(FzW(1)+FzW(2));
+    Cf = muL0*CfRaw;
+    %Cr = muL0*(FzW(3)+FzW(4));
+    Cr = muL0*CrRaw;
+    A11 = -(Cf+Cr);
+    A12 = -m*V0-(Cf*rxf+Cr*rxr)/(V0);
+    A21 = -(Cf*rxf+Cr*rxr);
+    A22 = -(Cf*lf^2+Cr*lr^2)/(V0);
+    A = [1/(m*V0) 0;0 1/Iz]*[A11 A12; A21 A22];
+    B1 = [1/(m*V0) 0;0 1/Iz]*[Cr; Cr*rxr];
+    B2 = [1/(m*V0) 0;0 1/Iz]*[Cf; Cf*rxf];
+    
+    s = (Cf*rxf+Cr*rxr)/(Cf+Cr);
+    if s > 0
+        disp('OVERSTEERED VEHICLE')
+        disp(['s = ',num2str(s),' m'])
+    elseif s < 0
+        disp('UNDERSTEERED VEHICLE')
+        disp(['s = ',num2str(s),' m'])
+    else
+        disp('NEUTRAL STEERED VEHICLE')
+    end
+    
     C = [1 0 ; 0 1];
     DA = [0 0; 0 0];
     D = [0 ; 0];
 
     xeq = [0;0];
-%    xeq = (A)^-1*[-B1*deltaR];
-    xeq = ((A)^-1)*[-B2*(deltaF)];
-
+    % xeq = (A)^-1*[-B1*deltaR];
+    xeq = (inv(A))*[-B2*(deltaF)];
+    
     % Ideal turn Yaw Rate
-    omegaZack = (V0/(rxf-rxr))*tan(deltaF);
+     omegaZack = (V0/(rxf-rxr))*tan(deltaF);
     xeq(2,1) = omegaZack;
+    
+    if abs(xeq(2)) > 0.85*1.3*g/V0
+        xeq(2) = 0.85*1.3*g/V0 * sign(xeq(2));
+    end
+    if abs(xeq(1)) > atan(0.02*1.3*g)
+        xeq(1) = atan(0.02*1.3*g) * sign(xeq(1));
+    end
+    
+   
     
     %Q = inv(2*diag([(0.2/180*pi)^2 (1/180*pi)^2]));  % MAX 1/||x||
     %R = inv(4*eye(1)*(40*(2*pi)/60)^2);              % MAX 1/||u||
-    Q = inv([0.1 0; 0 0.05]);
-    R = inv([1.25]);
+    Q = inv([0.005 0; 0 0.02]);
+    R = inv([0.05]);
     %sysA = ss(A, [B1, B2], C, DA);
     %sysA.StateName = ["betaU","omegaZ"];
     %sysA.InputName = ["deltar","deltaf"];
