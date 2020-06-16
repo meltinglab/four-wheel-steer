@@ -1,58 +1,73 @@
 % !TeX spellcheck = en_GB
-\documentclass[a4paper,12pt,titlepage, hidelinks]{report}
+\documentclass[a4paper,12pt,titlepage,hidelinks]{report}
 \pdfpagewidth
 \paperwidth
 \pdfpageheight
 \paperheight
-\usepackage[english]{babel}
-%\usepackage[italian]{babel}
-\usepackage{epsfig}
-\usepackage{fancyhdr}
-%\usepackage{xcolor}
-\usepackage{amsmath,amssymb}
-\usepackage{amscd}
+
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage[italian,english]{babel}
+
+\usepackage{epsfig}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+%\fancyhead[RO]{\chaptername}
+\fancyhead[RE]{\rightmark}
+%\fancyhead{RE}{\thesection}
+
+\fancyfoot{}
+\fancyfoot[LO,RE]{\thepage}
+
+\usepackage{amsmath,amssymb}
+\usepackage{amscd}
+
 \usepackage{version}
+
 \usepackage[usenames,dvipsnames]{xcolor}
-\usepackage{graphicx,color,listings}
+
+\usepackage{graphicx}
+\graphicspath{{Images/}}
+
 \usepackage{hologo}
 \frenchspacing
 
 % Source code display
-%\usepackage{listings}
-%\lstset{style=Matlab-editor}
-%\lstset{basicstyle=\scriptsize\ttfamily,
-%	tabsize=2,
-%	frame=leftline,
-%	numbers=left,
+\usepackage{matlab-prettifier}
+\lstset{
+	style = Matlab-editor,
+	basicstyle = \mlttfamily,
+%	tabsize = 2,
+	frame = leftline,
+	numbers=left,
 %	numberstyle=\tiny,
 %	stepnumber=1,
-%	%firstnumber=last,
-%	language=matlab
-%}
-
-\usepackage[numbered]{matlab-prettifier}
-\lstset{
-  style              = Matlab-editor,
-  basicstyle         = \mlttfamily,
-  escapechar         = ",
-  mlshowsectionrules = true,
+%	firstnumber=last,
+	escapechar = ",
+	mlshowsectionrules = true,
 }
 
+
+\usepackage{rotating}
+
+\usepackage{caption}
+\captionsetup{labelformat=empty,textfont=sl}
+\usepackage{subcaption}
+
+\usepackage{multirow}
+\usepackage{picture}
+\numberwithin{figure}{section}
 
 % Bring hyperlinks to life
 \usepackage{hyperref}
 
 % Hyperref has to be the LAST package loaded, yet BEFORE geometry
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
-\usepackage{rotating}
-\usepackage{caption}
-\captionsetup{labelformat=empty,textfont=sl}
 \geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm}
-\usepackage{multirow}
-\usepackage{picture}
-\numberwithin{figure}{section}
 \textwidth16cm
 \textheight24cm
 \topmargin0mm
@@ -60,7 +75,24 @@
 \oddsidemargin0mm
 \evensidemargin0mm
 
+
+\title{Hello trolls!}
+%\author{Team SottoPressione}
+\author{
+	    Belle
+	    \and
+	    Cileno
+	    \and
+	    Dave
+	    \and
+	    Fil
+	   }
+\date{\today}
+
+
 \begin{document}
+
+	\maketitle
 
 	\tableofcontents
 
