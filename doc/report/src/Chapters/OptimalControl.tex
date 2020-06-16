@@ -1,37 +1,3 @@
-% !TeX spellcheck = en_GB
-\documentclass[a4paper,12pt,titlepage]{report}
-\pdfpagewidth
-\paperwidth
-\pdfpageheight
-\paperheight
-\usepackage[english]{babel}
-%\usepackage[italian]{babel}
-\usepackage{epsfig}
-\usepackage{fancyhdr}
-\usepackage{amsmath,amssymb}
-\usepackage{amscd}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{version}
-\usepackage[usenames,dvipsnames]{xcolor}
-\usepackage{graphicx,color,listings}
-\usepackage{hologo}
-\frenchspacing
-\usepackage{geometry}
-\usepackage{rotating}
-\usepackage{caption}
-\captionsetup{labelformat=empty,textfont=sl}
-\geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm} \usepackage{multirow}
-\usepackage{picture}
-\numberwithin{figure}{section}
-\textwidth16cm
-\textheight24cm
-\topmargin0mm
-\headheight0mm
-\oddsidemargin0mm
-\evensidemargin0mm
-
-\begin{document}
 \chapter{Optimal Control Design}
 Inside this chapter, we are going to show the control system we designed for our application. This phase has been the most complex one for different reasons. Generally speaking, the design of a specific control law for each physical system depends by many factors, having different levels of influence. For this reason, we tried to design the best possible control law by considering more the most important elements and neglecting and/or minimizing the ones with a low impact. As a conseguence, this step required us lots of time to be fully accomplished.\\
 First of all, we described our vehicle model through the Matlab Software. We have both provided its physical description and initialized all those variables able to influence its behcaviour. Than we thought about the model simulator in order to have the simulation environment inside with test our changes. Moreover, with the aim of controlling the steering angle of the rear wheels, we dsigned the optimal control law for our system. Finally, we merged the simulator and the control low together in Simulink. \\
@@ -72,4 +38,3 @@ This reason lead us towards the consideration of extracting not one matrix for K
 This extraction is not done in real time, due to the relatively high computational load of performing an LQR algorithm, it is instead done only once at the startup of the system (now that we are in prototypation phase, later on it will only be performed once and for all). After this initial computations made at some discrete linearization points, the results will be stored in lookup tables, at runtime the only workload for the microcontroller will be to take as input the actual state of the machine, specifically the two input parameters written in the bullet list here above and perform matrix multiplcation as usual.//
 Obviously, given the discrete nature of the lookup table, it will not be possible to have a perfect match for the actual disturbances of the vehicle that span across a continuous space, so we will have to approximate to the nearest point of linearization. It will be anyway a better approximated solution with respect to a system with a single linearization point and a single K.//
 Another reason why we have devoted one script for the extraction of K matrices and another one for the computation of realtime control is that you can't generate C code using matlab coder or even a simulink block with Matlab code containing the lqr algorhytm present in the control system toolbox. We needed to keep it separate.
-\end{document}

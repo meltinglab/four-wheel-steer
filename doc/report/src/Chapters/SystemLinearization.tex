@@ -1,40 +1,6 @@
-% !TeX spellcheck = en_GB
-\documentclass[a4paper,12pt,titlepage]{report}
-\pdfpagewidth
-\paperwidth
-\pdfpageheight
-\paperheight
-\usepackage[english]{babel}
-%\usepackage[italian]{babel}
-\usepackage{epsfig}
-\usepackage{fancyhdr}
-\usepackage{amsmath,amssymb}
-\usepackage{amscd}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{version}
-\usepackage[usenames,dvipsnames]{xcolor}
-\usepackage{graphicx,color,listings}
-\usepackage{hologo}
-\frenchspacing
-\usepackage{geometry}
-\usepackage{rotating}
-\usepackage{caption}
-\captionsetup{labelformat=empty,textfont=sl}
-\geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm} \usepackage{multirow}
-\usepackage{picture}
-\numberwithin{figure}{section}
-\textwidth16cm
-\textheight24cm
-\topmargin0mm
-\headheight0mm
-\oddsidemargin0mm
-\evensidemargin0mm
-
-\begin{document}
 \chapter{System Linearization}
 	In this section we are going to describe the procedure we adopted in order to get the final Linearized System. We will show our initial approximations and the main step we took into account, starting from the Non-Linear system equations up to the final equilibrium points. 
-\section{Initial Approximations} \label{approx}	
+\section{Initial Approximations} \label{approx}
 	In order to modify the vehicle behaviour, we decided to act on the steering angles of the rear wheels. Thus, to elaborate that control system, we have considered a simplified vehicle model, characterized by the following approximations:
 		\begin{itemize}
 			\item[1.1] $ \gamma=\dot{\gamma}=0 $: flat plane condition leading to a null vertical acceleration;
@@ -346,4 +312,3 @@
 				0 & 1
 			\end{bmatrix}
 		\end{equation}
-\end{document}

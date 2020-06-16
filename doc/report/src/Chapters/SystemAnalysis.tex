@@ -1,38 +1,4 @@
-% !TeX spellcheck = en_GB
-\documentclass[a4paper,12pt,titlepage]{report}
-\pdfpagewidth
-\paperwidth
-\pdfpageheight
-\paperheight
-\usepackage[english]{babel}
-%\usepackage[italian]{babel}
-\usepackage{epsfig}
-\usepackage{fancyhdr}
-\usepackage{amsmath,amssymb}
-\usepackage{amscd}
-\usepackage[T1]{fontenc}
-\usepackage[utf8]{inputenc}
-\usepackage{version}
-\usepackage[usenames,dvipsnames]{xcolor}
-\usepackage{graphicx,color,listings}
-\usepackage{hologo}
-\frenchspacing
-\usepackage{geometry}
-\usepackage{rotating}
-\usepackage{caption}
-\captionsetup{labelformat=empty,textfont=sl}
-\geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm} \usepackage{multirow}
-\usepackage{picture}
-\numberwithin{figure}{section}
-\textwidth16cm
-\textheight24cm
-\topmargin0mm
-\headheight0mm
-\oddsidemargin0mm
-\evensidemargin0mm
-
-\begin{document}
-	\chapter{System Analysis: Stability, Reachability and Equilibrium Points}
+\chapter{System Analysis: Stability, Reachability and Equilibrium Points}
 	Within the current chapter, we are going to describe how we analysed our system. Especially, we will firstly show how we proved the system stability and, finally, we will exhibit the equilibrium points we got applying the optimal control theory.
 	\section{System Stability} 
 	From the theory point of view, it is possible to define "stable" a Linear Time Invariant (LTI) system IF ONLY all the eigenvalues of the matrix A are strictly negative. With regard to our specific condition, since A $\in M_{2X2}$, the purpose was to guarantee the following statement:\\
@@ -42,7 +8,7 @@
 	During the design phase of our system model, we chose to directly include an automatic function computing the equation \ref{eq.Eigenvalues}. In particular, in Matlab, we have reserved few lines of code both to perform the algebraic calculation and to display the final result for the user. Looking at the figure \ref{stability}, we
 	\begin{figure}
 		\centering
-		\includegraphics[scale=1]{Stability}
+		\includegraphics[scale=1]{Images/Stability}
 		\caption{Lin Plant - Stability}
 		\label{stability}
 	\end{figure}
@@ -73,4 +39,3 @@
 	A^{-1}[-B_{1} \tilde\delta_{wr} - B_{2} \tilde\delta_{wf}]
 	\end{equation}
 	From the equation \ref{eq points} we got our equilibrium points, $\beta_{uEQ}$ and $\omega_{zEQ}$.
-\end{document}
