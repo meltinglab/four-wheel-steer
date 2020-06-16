@@ -4,7 +4,7 @@ switchBlock = find_system('CRReferenceApplication', 'BlockType', 'Constant', 'Na
 %objparams = get_param(switchBlock{1}, 'ObjectParameters');
 
 
-rngRearSteer = (5/180)*pi;    % Rear steering range [rad]
+rngRearSteer = deg2rad(5);              % Rear steering range [rad]
 
 maxAngle = 30;                          % [deg]
 resAngle = 3;                           % [deg]
