@@ -77,11 +77,14 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     a22 = -1/Iz*(2*Fwz*muL0*(2*(rxf^2 + ryf^2)+2*(rxr^2+ryf^2))/V0);
 
     A = [a11 a12; a21 a22];
-    eigenvalues = eig(A)
-    if eigenvalues(1)<0  
-      if eigenvalues(2)<0
-     disp('The matrix A is Hurwitz.')
-    end
+    
+    %System Stability
+    eigenvalues = eig(A);
+    Re = real(eigenvalues);
+    if Re(1)<0  
+        if Re(2)<0
+          disp('The matrix A is Hurwitz.')
+        end
     end 
     
     b111 = 1/(m*V0)*(-sin(betaU0)*dFwxdr+cos(betaU0)*dFwydr);
@@ -91,7 +94,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     % System Reachability 
     Reachable = [B1 A*B1];
     if rank(Reachable) == 2
-        disp('The state space is completely reachable!')
+        disp('The state space is completely reachable.')
     end
 
     b211 = 1/(m*V0)*(-sin(betaU0)*dFwxdf+cos(betaU0)*dFwydf);
