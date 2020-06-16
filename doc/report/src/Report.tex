@@ -1,5 +1,5 @@
 % !TeX spellcheck = en_GB
-\documentclass[a4paper,12pt,titlepage]{report}
+\documentclass[a4paper,12pt,titlepage, hidelinks]{report}
 \pdfpagewidth
 \paperwidth
 \pdfpageheight
@@ -8,6 +8,7 @@
 %\usepackage[italian]{babel}
 \usepackage{epsfig}
 \usepackage{fancyhdr}
+%\usepackage{xcolor}
 \usepackage{amsmath,amssymb}
 \usepackage{amscd}
 \usepackage[T1]{fontenc}
@@ -17,11 +18,39 @@
 \usepackage{graphicx,color,listings}
 \usepackage{hologo}
 \frenchspacing
-\usepackage{geometry}
+
+% Source code display
+%\usepackage{listings}
+%\lstset{style=Matlab-editor}
+%\lstset{basicstyle=\scriptsize\ttfamily,
+%	tabsize=2,
+%	frame=leftline,
+%	numbers=left,
+%	numberstyle=\tiny,
+%	stepnumber=1,
+%	%firstnumber=last,
+%	language=matlab
+%}
+
+\usepackage[numbered]{matlab-prettifier}
+\lstset{
+  style              = Matlab-editor,
+  basicstyle         = \mlttfamily,
+  escapechar         = ",
+  mlshowsectionrules = true,
+}
+
+
+% Bring hyperlinks to life
+\usepackage{hyperref}
+
+% Hyperref has to be the LAST package loaded, yet BEFORE geometry
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
 \usepackage{rotating}
 \usepackage{caption}
 \captionsetup{labelformat=empty,textfont=sl}
-\geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm} \usepackage{multirow}
+\geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm}
+\usepackage{multirow}
 \usepackage{picture}
 \numberwithin{figure}{section}
 \textwidth16cm

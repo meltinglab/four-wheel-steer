@@ -29,7 +29,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     r = 0.29;           % Tyre Radius [m]
     CrRaw = 35000;      % Rear Cornering Stiffness (from Simulator)
     CfRaw = 15000;      % Front Cornering Stiffness (from Simulator)
-    
+
     % Wheel Angles
     delta = [ deltaF deltaF deltaR deltaR ];
 
@@ -53,7 +53,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     CR = -0.05;     % Rolling Resistance
 %   Iz = 1200*(rxr^2+ryf^2)^2;  % Z Axis Inertial Matrix
     Iz = vehicle.YawMomentInertia;
-    
+
     if V0 < 1       % Divide-by-Zero safeguard
         V0 = 1
     end
@@ -77,21 +77,19 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     a22 = -1/Iz*(2*Fwz*muL0*(2*(rxf^2 + ryf^2)+2*(rxr^2+ryf^2))/V0);
 
     A = [a11 a12; a21 a22];
-    
+
     %System Stability
     eigenvalues = eig(A);
     Re = real(eigenvalues);
-    if Re(1)<0  
-        if Re(2)<0
+    if Re(1)<0 && Re(2)<0
           disp('The matrix A is Hurwitz.')
-        end
-    end 
-    
+    end
+
     b111 = 1/(m*V0)*(-sin(betaU0)*dFwxdr+cos(betaU0)*dFwydr);
     b112 = 1/Iz*(2*CR*Fwz*(rxf)+2*Fwz*muL0*8/7*(rxf));
     B1 = [b111; b112];
 
-    % System Reachability 
+    % System Reachability
     Reachable = [B1 A*B1];
     if rank(Reachable) == 2
         disp('The state space is completely reachable.')
@@ -104,10 +102,10 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     % Cornering Stiffness system
     lf = sqrt(rxf^2+ryf^2);
     lr = sqrt(rxr^2+ryf^2);
-    
+
     Cf = muL0*CfRaw;
     Cr = muL0*CrRaw;
-    
+
     A11 = -(Cf+Cr);
     A12 = -m*V0-(Cf*rxf+Cr*rxr)/(V0);
     A21 = -(Cf*rxf+Cr*rxr);
@@ -115,18 +113,18 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     A = [1/(m*V0) 0;0 1/Iz]*[A11 A12; A21 A22];
     B1 = [1/(m*V0) 0;0 1/Iz]*[Cr; Cr*rxr];
     B2 = [1/(m*V0) 0;0 1/Iz]*[Cf; Cf*rxf];
-    
+
     C = [1 0 ; 0 1];
     D = [0 ; 0];
 
     xeq = [0;0];
     % xeq = (A)^-1*[-B1*deltaR];
     xeq = (inv(A))*[-B2*(deltaF)];
-    
+
     % Ideal turn Yaw Rate
     omegaZack = (V0/(rxf-rxr))*tan(deltaF);
     xeq(2,1) = omegaZack;
-               
+
     Q = inv([0.005 0; 0 0.02]);       % MAX 1/||x||
     R = inv([0.05]);                  % MAX 1/||u||
 
