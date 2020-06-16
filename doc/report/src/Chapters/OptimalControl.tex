@@ -1,0 +1,40 @@
+\chapter{Optimal Control Design}
+Inside this chapter, we are going to show the control system we designed for our application. This phase has been the most complex one for different reasons. Generally speaking, the design of a specific control law for each physical system depends by many factors, having different levels of influence. For this reason, we tried to design the best possible control law by considering more the most important elements and neglecting and/or minimizing the ones with a low impact. As a conseguence, this step required us lots of time to be fully accomplished.\\
+First of all, we described our vehicle model through the Matlab Software. We have both provided its physical description and initialized all those variables able to influence its behcaviour. Than we thought about the model simulator in order to have the simulation environment inside with test our changes. Moreover, with the aim of controlling the steering angle of the rear wheels, we dsigned the optimal control law for our system. Finally, we merged the simulator and the control low together in Simulink. \\
+The next sections will contain a more accurated description of those step we just introduced.
+\section{Vehicle Model design}
+It was the first step of the entire procedure we realized. The current section was purely related to achieve a real vehicle model, characterized by all the  parameters needed to simulate and analyze the car behaviour. As a matter of facts, we have to remember that our goal was to control the vehicle working conditions by means of the rear steering angle actuation. We could reach the previous purpose only with a real representation of the vehicle itself, made up of its main technical and physical parameters.\\
+We have implemented such a model on Matlab, describing the automobile features inside a live script. Firstly, we have initialized all the control variables needed for the following computations. Than, we fixed some vehicle's physical parameters, such as mass, wheels position with respect to centre of gravity of the car, and so on. At the end of current section, there will be an extract from our Matlab model.
+\begin{figure} %\label{key}
+	\centering
+	%		\includegraphics[scale=0.5,width=0.25\textheight]{NOME}
+	%		\caption{text}
+\end{figure}
+\section{Control Law design}
+This step was the most critical one because of its close correlation with the project purpose itself. Our starting object was to develop a control law ables to act over the steering angle of the rear wheels, $\delta_{wr}$. There will follow a step-by-step description of our procedure.
+\subsection{Cost Function $J$ Analysis}
+Starting from the theory, we studied the real meaning of "Cost Function" and its elements. The function's goal is to design a control system, $u$, ables to minimize the function $J$ itself. In a nutshell, if a certain condition is strongly desired, we have to associate to it a low cost, and viceversa. \\
+There follow the linear quadratic form of the cost function $J$ for a general LTI system:
+\begin{equation}
+J = x^{T}(t_{f}) S_{f} x(t_{f})\int_{t_{0}}^{t_{f}} e^{T} Q e + u^{T} R u \ dt
+\end{equation}
+where:
+\begin{itemize}
+	\item $e$ represents a linear combination of \textit{states} x;
+	\item $u$ represents the control law;
+	\item $ [t_{0},t_{f}] $ represents the time spain in which we evaluated our cost function J;
+	\item $ S_{f} = S_{f}^{T} \geq0 $ represents the cost associated to the state once it is evaluated in $t=t_{f}$, so "how much far i am from the origin";
+	\item $ Q=Q^{T}\geq 0 $ and $ R=R^{T}\geq 0 $ represent, respectively, the costs for having $e\neq0$ and $u\neq0$, during the time span.
+\end{itemize}
+\subsection{Q and R Matrices}
+We could reach our final goal, in terms of meaningful imposed rear steering angle, through the "tuning" process of matrices $Q$ and $R$. For what concern the matrix $S$, we set it equal to zero ..?..	
+\subsection{K multiplier}
+Following the theory of optimal control we should extract one single K matrix around the linearization point. This made our working condition very limited, because in choosing a linearization point we would have to choose one single steering angle and angular velocity, thus restricting the range of validity of our system around a certain kind of curve, that initially was as specific as a straight trajectory ($\omega_{z}=0$).
+This reason lead us towards the consideration of extracting not one matrix for K, but a whole range of values, based on two inputs from the driver:
+\begin{itemize}
+	\item front steering angle $\delta_{wf}$
+	\item speed $V_0$
+\end{itemize}	
+This extraction is not done in real time, due to the relatively high computational load of performing an LQR algorithm, it is instead done only once at the startup of the system (now that we are in prototypation phase, later on it will only be performed once and for all). After this initial computations made at some discrete linearization points, the results will be stored in lookup tables, at runtime the only workload for the microcontroller will be to take as input the actual state of the machine, specifically the two input parameters written in the bullet list here above and perform matrix multiplcation as usual.//
+Obviously, given the discrete nature of the lookup table, it will not be possible to have a perfect match for the actual disturbances of the vehicle that span across a continuous space, so we will have to approximate to the nearest point of linearization. It will be anyway a better approximated solution with respect to a system with a single linearization point and a single K.//
+Another reason why we have devoted one script for the extraction of K matrices and another one for the computation of realtime control is that you can't generate C code using matlab coder or even a simulink block with Matlab code containing the lqr algorhytm present in the control system toolbox. We needed to keep it separate.

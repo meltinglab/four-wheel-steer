@@ -1,1 +1,6 @@
 # TeX auxiliary files
+*.aux
+*.log
+*.toc
+*.pdf
+*.gz
