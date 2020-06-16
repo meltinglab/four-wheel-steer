@@ -1,0 +1,39 @@
+% !TeX spellcheck = en_GB
+\documentclass[a4paper,12pt,titlepage]{report}
+\pdfpagewidth
+\paperwidth
+\pdfpageheight
+\paperheight
+\usepackage[english]{babel}
+%\usepackage[italian]{babel}
+\usepackage{epsfig}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb}
+\usepackage{amscd}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{version}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx,color,listings}
+\usepackage{hologo}
+\frenchspacing
+\usepackage{geometry}
+\usepackage{rotating}
+\usepackage{caption}
+\captionsetup{labelformat=empty,textfont=sl}
+\geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm} \usepackage{multirow}
+\usepackage{picture}
+\numberwithin{figure}{section}
+\textwidth16cm
+\textheight24cm
+\topmargin0mm
+\headheight0mm
+\oddsidemargin0mm
+\evensidemargin0mm
+
+\begin{document}
+	\chapter{Introduction}
+	Nowadays, many urban car manufactures are implementing the four-wheel steering system control on board. In this new vehicle generation, not only the front wheels are steerable but also the rear ones can be steered too. As a consequence, the system will be characterized by a higher number of controlling inputs under equal number of states. This situation increases the maneuverability of the vehicle itself and provides the possibility of optimization or constraint satisfaction during the vehicle transfer between two definite boundaries.\\
+	In this paper, we are going to present the kinematic and dynamic modelling of a four-wheel steering vehicle. Moreover, we will show our design procedure about the car optimal controller by means of the Linear Quadratic Regulator (LQR). The correctness of modelling and efficiency of the designed optimal controller has been verified by the aid of a specific simulator we chose.\\
+	The objective is to create a portable control, working independently from other control systems, that could be integrate in any vehicle. It takes as input the state of the vehicle and, by acting over the steering angle of the rear wheels, it may reach an optimal final behaviour.
+\end{document}

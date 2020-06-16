@@ -1,0 +1,42 @@
+% !TeX spellcheck = en_GB
+\documentclass[a4paper,12pt,titlepage]{report}
+\pdfpagewidth
+\paperwidth
+\pdfpageheight
+\paperheight
+\usepackage[english]{babel}
+%\usepackage[italian]{babel}
+\usepackage{epsfig}
+\usepackage{fancyhdr}
+\usepackage{amsmath,amssymb}
+\usepackage{amscd}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{version}
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{graphicx,color,listings}
+\usepackage{hologo}
+\frenchspacing
+\usepackage{geometry}
+\usepackage{rotating}
+\usepackage{caption}
+\captionsetup{labelformat=empty,textfont=sl}
+\geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm} \usepackage{multirow}
+\usepackage{picture}
+\numberwithin{figure}{section}
+\textwidth16cm
+\textheight24cm
+\topmargin0mm
+\headheight0mm
+\oddsidemargin0mm
+\evensidemargin0mm
+
+\begin{document}
+	\chapter{Vehicle Simulator}
+	In order to have the most realistic simulation possible, we did not design our own discrete time non-linear simulator, but we employed a Matlab toolbox called "vehicle dynamics" and we integrated it into our project. It is a Simulink based toolbox that has some useful blocks for both many vehicle control systems (like ESP and cruise control) and for simulations of vehicle's components (like engine, suspensions and transmission). 
+	It has been particularly useful also because it offered already pre-built reference applications, for constant radius steering, double lane change and similar situations, coupled with a system of scopes that allowed us to visualize the data that we needed. We built our application starting from the constant radius steering, adding our control system for the rear wheels together with the other controls.
+	\paragraph{Driver inputs simulation}
+	The Vehicle Dynamics blockset also offers a block called "predictive driver" that, given a reference trajectory, tries to maintain it acting on the accelerator pedal or on the steering wheel. After some trials we verified that it was not designed with the knowledge of steerable rear wheels, thus leading to instability of its prediction system, we had to disable it and bypass it, giving directly a fixed front steer angle $\delta_{wf}$ and speed.
+	\paragraph{Graphic engine}
+	This blockset also includes a graphic tool, in order to view in a 3D environment the movements of the vehicle, it can be enabled or disabled based on the graphics capabilities of the system on which the software is working on. This tool is based upon Unreal Engine.
+\end{document}
