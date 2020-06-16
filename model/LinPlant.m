@@ -53,7 +53,11 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     CR = -0.05;     % Rolling Resistance
 %   Iz = 1200*(rxr^2+ryf^2)^2;  % Z Axis Inertial Matrix
     Iz = vehicle.YawMomentInertia;
-    V0 = V0/3.6;
+    
+    if V0 < 1       % Divide-by-Zero safeguard
+        V0 = 1
+    end
+    V0 = V0/3.6;    % [km/h] --> [m/s]
 
     Fwz = m*g/4;
     Fwx = 4*Fwz*(muS*sin(deltaR)+(muL0+CR)*cos(deltaR)-muS*sin(deltaF)+(muL0+CR)*cos(deltaF));
