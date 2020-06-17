@@ -55,7 +55,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     Iz = vehicle.YawMomentInertia;
 
     if V0 < 1       % Divide-by-Zero safeguard
-        V0 = 1
+        V0 = 1;
     end
     V0 = V0/3.6;    % [km/h] --> [m/s]
 
@@ -82,7 +82,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     eigenvalues = eig(A);
     Re = real(eigenvalues);
     if Re(1)<0 && Re(2)<0
-          disp('The matrix A is Hurwitz.')
+          disp('The matrix A is Hurwitz.');
     end
 
     b111 = 1/(m*V0)*(-sin(betaU0)*dFwxdr+cos(betaU0)*dFwydr);
@@ -92,7 +92,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     % System Reachability
     Reachable = [B1 A*B1];
     if rank(Reachable) == 2
-        disp('The state space is completely reachable.')
+        disp('The state space is completely reachable.');
     end
 
     b211 = 1/(m*V0)*(-sin(betaU0)*dFwxdf+cos(betaU0)*dFwydf);
