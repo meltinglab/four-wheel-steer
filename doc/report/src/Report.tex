@@ -3,17 +3,22 @@
 % !TEX spellcheck = en-US
 % !TEX root = Report.tex
 
-\documentclass[a4paper,11pt,titlepage,hidelinks]{report}
-\pdfpagewidth
-\paperwidth
-\pdfpageheight
-\paperheight
+\documentclass[a4paper,11pt,titlepage]{report}
+%\pdfpagewidth
+%\paperwidth
+%\pdfpageheight
+%\paperheight
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[italian,english]{babel}
 
-\usepackage{epsfig}
+\usepackage{indentfirst}
+\usepackage{microtype}
+
+% Limit section numbering and table of contents depths
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
 
 \usepackage{fancyhdr}
 \pagestyle{fancy}
@@ -26,6 +31,8 @@
 
 \fancyfoot{}
 \fancyfoot[LO,RE]{\thepage}
+
+\usepackage{epsfig}
 
 \usepackage{amsmath,amssymb}
 \usepackage{amscd}
@@ -58,6 +65,10 @@
 
 \usepackage{rotating}
 
+% References
+\usepackage[english]{varioref}		% Decorated cross-references
+%\usepackage{showkeys}			% Label debug only. Comment for final release!
+
 \usepackage{caption}
 \captionsetup{labelformat=empty,textfont=sl}
 \usepackage{subcaption}
@@ -67,7 +78,8 @@
 \numberwithin{figure}{section}
 
 % Bring hyperlinks to life
-\usepackage{hyperref}
+\usepackage[colorlinks,bookmarks]{hyperref}
+%\usepackage{bookmarks}
 
 % Hyperref has to be the LAST package loaded, yet BEFORE geometry
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
@@ -79,6 +91,7 @@
 %\oddsidemargin0mm
 %\evensidemargin0mm
 
+\usepackage{a4ws-aliases}
 
 \title{Hello trolls!}
 %\author{Team SottoPressione}
