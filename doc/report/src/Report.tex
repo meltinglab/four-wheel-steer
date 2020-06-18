@@ -20,6 +20,7 @@
 \setcounter{secnumdepth}{1}
 \setcounter{tocdepth}{1}
 
+% Custom header and footer
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 
@@ -32,21 +33,25 @@
 \fancyfoot{}
 \fancyfoot[LO,RE]{\thepage}
 
+
+\usepackage{version}
+
 \usepackage{epsfig}
 
+
+% Scientific
 \usepackage{amsmath,amssymb}
 \usepackage{amscd}
 \usepackage{siunitx}
 
-\usepackage{version}
-
+% Grafic stuff
 \usepackage[usenames,dvipsnames]{xcolor}
 
 \usepackage{graphicx}
 \graphicspath{{Images/}}
 
 \usepackage{hologo}
-\frenchspacing
+%\frenchspacing
 
 % Source code display
 \usepackage{matlab-prettifier}
@@ -92,7 +97,10 @@
 %\oddsidemargin0mm
 %\evensidemargin0mm
 
+
+% Custom A4WS macros and aliases
 \usepackage{a4ws-aliases}
+
 
 \title{Hello trolls!}
 %\author{Team SottoPressione}
