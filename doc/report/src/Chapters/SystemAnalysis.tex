@@ -18,16 +18,22 @@
 		\label{stability}
 	\end{figure}    
 	\section{System Reachability}
-	The procedure we adopted to prove the state space reachability has been almost the same one with respect to the previous section, \ref{S}. Like before, we inform the user, about process correctness, by means of a sentence highlighted in purple. As it is clearly visible from the image \ref{reachability}, the function firstly computes the rank of the matrix \textit{Reachable}, than it checks if it is equal or not than two. We would like to point out that, the composition of matrix \textit{Reachable}, has been done by following the state space theory we dealt with in class. Therefore, the columns of such a matrix represent all the physical directions along which the control can actually work. \\
-	Making readable those kinks of information can be really useful, for the user, in order to better understand what the control system is actually doing.
+	The procedure we adopted to prove the state space reachability has been almost the same one with respect to the previous section, \ref{S}. Like before, we inform the user, about process correctness, by means of a sentence highlighted in purple. As it is clearly visible from the image \ref{reachability}, the function firstly computes the rank of the matrix \textit{Reachable}, as it is present also in equation \ref{Reachability Matrix}, then it checks if it is equal or not than two, that is the dimension of our state space. We would like to point out that, the composition of matrix \textit{Reachable}, has been done by following the state space theory we dealt with in class. Therefore, the columns of such a matrix represent all the physical directions along which the control can actually work. \\
+	Making readable those kind of information can be really useful, for the user, in order to better understand what the control system is actually doing.
 	\begin{figure}
 		\centering
 		\lstinputlisting[caption={[Reachability]}, firstline=92, lastline=96, firstnumber=92]{../../../model/LinPlant.m}
 		\caption{Lin Plant - State Space Reachability}
 		\label{reachability}
 	\end{figure}
+	\begin{equation} \label{Reachability Matrix}
+	\ R =
+	\begin{bmatrix}
+	\ B_{1} & AB_{1}
+	\end{bmatrix} 
+	\end{equation}
 	\section{Equilibrium Points}
-	After checking the system stability and the state space reachability, we proceeded With the purpose of getting the equilibrium points of both $\beta_{u}$ and $\omega_{z}$, we have imposed the following condition to our LTI system:
+	After checking the system stability and the state space reachability, we proceeded with the purpose of getting the equilibrium points of both $\beta_{u}$ and $\omega_{z}$, we have imposed the following condition to our LTI system:
 	\begin{equation} \label{Equilibrium condition}
 	\begin{bmatrix}
 	\dot{\tilde{\beta_{u}}} \\
@@ -41,7 +47,7 @@
 	\tilde{\beta_{u}} \\
 	\tilde{\omega_{z}}
 	\end{bmatrix} 
-	B_{1}[\tilde{\delta_{wr}}] B_{2}[\tilde{\delta_{wf}}]
+	B_{2}[\tilde{\delta_{wf}}]
 	\end{equation}
 	The equation \ref{Equilibrium condition} is directly given by the "equilibrium point" definition: \textit{to be considered an equilibrium poit, the current parameter must have a zero time derivative}. Therefore, if the matrix A is invertible, we can write the following statement:
 	\begin{equation} \label{eq points}
@@ -49,7 +55,7 @@
 	\tilde{\beta_{uEQ}} \\
 	\tilde{\omega_{zEQ}}
 	\end{bmatrix} = 
-	A^{-1}[-B_{1} \tilde\delta_{wr} - B_{2} \tilde\delta_{wf}]
+	A^{-1}[- B_{2} \tilde\delta_{wf}]
 	\end{equation}
-	From the equation \ref{eq points} we got our equilibrium points, $\beta_{uEQ}$ and $\omega_{zEQ}$.
-	
+	From the equation \ref{eq points} we got our equilibrium points, $\beta_{uEQ}$ and $\omega_{zEQ}$,these equilibrium points are different from the linearization points that we computed at the beginning, while we were defining the linearized system. Given that our objective is to obtain a stable system, we then applied trajectory tracking to keep the system around these states.\\
+	Our first attempt at computing the equilibrium points was positioned at startup of the system, in the sense that we computed them shortly after the linearization of the system, this means using a discrete $\delta_{f_{0}}$ and a discrete $V_{0}^B}$. Later on we understood that the inverse of a 2x2 matrix wasn't too heavy for a microcontroller and we moved the computation of the equilibrium states to our realtime controller. In this way we don't have anymore a discrete recollection of equilibrum states, instead we extract the current $\delta_{f}$ and $V^B$ from the simulator and we obtain a continuous function of the equilibrium states over time.
