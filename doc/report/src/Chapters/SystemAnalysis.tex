@@ -4,22 +4,30 @@
 % !TEX root = ../Report.tex
 
 \chapter{System Analysis: Stability, Reachability and Equilibrium Points}
-	Within the current chapter, we are going to describe how we analysed our system. Especially, we will firstly show how we proved the system stability and, finally, we will exhibit the equilibrium points we got applying the optimal control theory.
-	\section{System Stability} 
-	From the theory point of view, it is possible to define "stable" a Linear Time Invariant (LTI) system IF ONLY all the eigenvalues of the matrix A are strictly negative. With regard to our specific condition, since A $\in M_{2X2}$, the purpose was to guarantee the following statement:\\
+	Within the current chapter, we are going to describe how we analyzed our system. Especially, we will firstly show how we proved the system stability and, finally, we will exhibit the equilibrium points we got applying the optimal control theory.
+	\section{System Stability} \label{S}
+	From the theory point of view, it is possible to define "stable" a Linear Time Invariant (LTI) system if only all the eigenvalues of the matrix A are strictly negative. With regard to our specific condition, since A $\in M_{2X2}$, the purpose was to guarantee the following statement:\\
 	\begin{equation} \label{eq.Eigenvalues}
-	Re(\lambda_{1,2})=a_{1},a_{2} < 0
+		Re(\lambda_{1,2})=a_{1},a_{2} < 0
 	\end{equation}
-	During the design phase of our system model, we chose to directly include an automatic function computing the equation \ref{eq.Eigenvalues}. In particular, in Matlab, we have reserved few lines of code both to perform the algebraic calculation and to display the final result for the user. Looking at the figure \ref{stability}, we
+	During the design phase of our system model, we chose to directly include an automatic function computing the equation \ref{eq.Eigenvalues}. In particular, inside the Matlab file "LinPlant", we have reserved few lines of code both to perform the algebraic calculation and to display the final result directly to the user. Looking at the figure \ref{stability}, it is possible to see how we have implemented such a function.\\ With the aim of informing the user about the correctness of the algebraic computation, we display the sentence highlighted in purple. Once the real part of all the eigenvalues of a matrix is strictly negative, the matrix itself is declared "Hurwitz".
 	\begin{figure}
 		\centering
 		\lstinputlisting[caption={[Eigenvalues]}, firstline=81, lastline=86, firstnumber=81]{../../../model/LinPlant.m}
 		\caption{Lin Plant - Stability}
 		\label{stability}
-	\end{figure}
+	\end{figure}    
 	\section{System Reachability}
+	The procedure we adopted to prove the state space reachability has been almost the same one with respect to the previous section, \ref{S}. Like before, we inform the user, about process correctness, by means of a sentence highlighted in purple. As it is clearly visible from the image \ref{reachability}, the function firstly computes the rank of the matrix \textit{Reachable}, than it checks if it is equal or not than two. We would like to point out that, the composition of matrix \textit{Reachable}, has been done by following the state space theory we dealt with in class. Therefore, the columns of such a matrix represent all the physical directions along which the control can actually work. \\
+	Making readable those kinks of information can be really useful, for the user, in order to better understand what the control system is actually doing.
+	\begin{figure}
+		\centering
+		\lstinputlisting[caption={[Reachability]}, firstline=92, lastline=96, firstnumber=92]{../../../model/LinPlant.m}
+		\caption{Lin Plant - State Space Reachability}
+		\label{reachability}
+	\end{figure}
 	\section{Equilibrium Points}
-	With the purpose of getting the equilibrium points of both $\beta_{u}$ and $\omega_{z}$, we have imposed the following condition to our LTI system:
+	After checking the system stability and the state space reachability, we proceeded With the purpose of getting the equilibrium points of both $\beta_{u}$ and $\omega_{z}$, we have imposed the following condition to our LTI system:
 	\begin{equation} \label{Equilibrium condition}
 	\begin{bmatrix}
 	\dot{\tilde{\beta_{u}}} \\
@@ -35,7 +43,7 @@
 	\end{bmatrix} 
 	B_{1}[\tilde{\delta_{wr}}] B_{2}[\tilde{\delta_{wf}}]
 	\end{equation}
-	The equation \ref{Equilibrium condition} is directly given by the "equilibrium point" definition: \textit{to be considered an equilibrium poit, the current parameter must have a zero time derivative}. If the matrix A is invertible, we can write the following statement:
+	The equation \ref{Equilibrium condition} is directly given by the "equilibrium point" definition: \textit{to be considered an equilibrium poit, the current parameter must have a zero time derivative}. Therefore, if the matrix A is invertible, we can write the following statement:
 	\begin{equation} \label{eq points}
 	\begin{bmatrix}
 	\tilde{\beta_{uEQ}} \\
@@ -44,3 +52,4 @@
 	A^{-1}[-B_{1} \tilde\delta_{wr} - B_{2} \tilde\delta_{wf}]
 	\end{equation}
 	From the equation \ref{eq points} we got our equilibrium points, $\beta_{uEQ}$ and $\omega_{zEQ}$.
+	
