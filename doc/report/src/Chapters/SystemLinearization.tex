@@ -4,17 +4,17 @@
 % !TEX root = ../Report.tex
 
 \chapter{System Linearization}
-	In this section we are going to describe the procedure we adopted in order to get the final Linearized System. We will show our initial approximations and the main step we took into account, starting from the Non-Linear system equations up to the final equilibrium points. 
+	In this section we are going to describe the procedure we adopted in order to get the final Linearized System. We will show our initial approximations and the main step we took into account, starting from the Non-Linear system equations up to the final matrices. 
 \section{Initial Approximations} \label{approx}
-	In order to modify the vehicle behaviour, we decided to act on the steering angles of the rear wheels. Thus, to elaborate that control system, we have considered a simplified vehicle model, characterized by the following approximations:
+	In order to modify the vehicle behaviour, we decided to act on the steering angles of the rear wheels. Thus, in order to elaborate such control system, we have considered a simplified vehicle model, characterized by the following approximations:
 		\begin{itemize}
-			\item[1.1] $ \gamma=\dot{\gamma}=0 $: flat plane condition leading to a null vertical acceleration;
-			\item[1.2] $\vartheta = \phi = 0$ (Pitch and Roll angles, respectively): the vehicle is levelled with the North-West plane; 
+			\item[1.1] $ \gamma=\dot{\gamma}=0 $: flat plane condition leading to a null vertical acceleration ($ a_{z}=0 $);
+			\item[1.2] $\vartheta = \phi = 0$ (Pitch and Roll angles, respectively): the vehicle is leveled with the North-West plane; 
 			\item[1.3] No Wind and air drug contributions: the aerodynamic force components will be neglected;
 		\end{itemize} 
 \section{Non-Linear System}
 \subsection{1st Non-Linear Equation} 	
-	Firstly, we obtained the $\chi$ and $\psi$ math definitions starting from the Vehicle Kinematics Equantions (both the Guidance and the Rotation ones) combined with the previous approximations. Than, through their geometrical relation, we got the following equation:
+	Firstly, we obtained the $\chi$ and $\psi$ math definitions starting from the Vehicle Kinematics Equations (both the Guidance and the Rotation ones) combined with the previous approximations. Than, through their geometrical relation, we got the following equation:
 		\begin{equation}
 			\beta_{u} = \chi - \psi
 		\end{equation}
@@ -36,6 +36,115 @@
 		\dot{\omega}_{z}^{B} = \frac{1}{J_{z}} \tau_{z}^{B}
 	\end{equation}
 	The equations \ref{Betaudot} and \ref{omegazdot} represent, respectively, the 1st and the 2nd equations of the Non-Linear System.
+\section{Forces and Moments}
+Aiming at describing the vehicle behaviour in a specific situation, we should take into account both the forces and moments acting on it. \\ Regarding the overall \textit{Forces} typically applied to a generic vehicle, it is possible to split them into three main components: the \textit{gravity} force, the \textit{tire-wheels} forces and the \textit{aerodynamic} ones. In order to simplify our model, as previously said, we have considered some general approximations (see section \ref{approx}, page \pageref{approx}). We will report below the force-related ones:
+\begin{itemize}
+	\item \textit{Aerodynamic} forces are negligible;
+	\item Null vertical force acceleration leads to the simple vehicle force weight. 
+\end{itemize}
+Given these assumptions, we have obtained a system characterized only by the simple gravitational force of the vehicle and the \textit{tire-wheels} forces (from now on only "\textit{wheels} forces"). \\ Generally, the x-component of the \textit{wheels} forces (\textit{Longitudinal} member) is the sum of both rolling and friction resistances, while the y-one (\textit{Side} member) is only due to friction resistance. 
+Therefore, for each tire-wheel system of the vehicle, we have to evaluate both the components. \\
+There follow the \textit{wheels} forces acting, respectively, along the x,y and z-axis of the i-th tire-wheel system:
+\begin{equation} \label{split e roll}
+\begin{cases}
+F_{wx} = F_{Split} + F_{Rolling} = F_{wz} \mu_{L} + F_{wz} C_{R} \\
+F_{wy} = F_{Split} = F_{wz} \mu_{S} \\
+F_{wz} = \frac{mg}{4}
+\end{cases}
+\end{equation}
+It is important to emphasize that the relation \ref{split e roll} is true for the i-th wheel. In order to achieve the whole \textit{wheels} force acting over the entire vehicle, we should consider it four times. Within the next steps, we will develop the force equations contained inside the system \ref{split e roll}, in order to better show the most important parameters affecting them.
+\newpage
+Before going on, let us introduce some key concepts we are going to use. The \textit{Friction Coefficient}, $ \mu $, is defined as follow:
+\begin{equation}
+\mu = \mu(\lambda_{TOT})
+\end{equation}
+Moreover, we can specify the \textit{Friction Coefficients} related to both the Longitudinal and the Side slip directions as follow:
+\begin{equation}
+\begin{cases}
+\mu_{L} = \mu(\lambda_{TOT}) \frac{\lambda_{L}}{\lambda_{TOT}}\\
+\mu_{S} = \mu(\lambda_{TOT}) \frac{\lambda_{S}}{\lambda_{TOT}}
+\end{cases}
+\end{equation}
+The \textit{Slip} ratio, instead, is responsible to the friction resistance and it is defined by:
+\begin{equation}
+\lambda_{TOT} = \sqrt{\lambda_{L}^{2} + \lambda_{S}^{2}} \leq 1
+\end{equation}
+Finally, by merging together all the concepts elaborated so far, we arrived to the following notation:	
+\begin{equation} \label{Force 1st part}
+\begin{bmatrix}
+F_{wx} \\
+F_{wy}
+\end{bmatrix}^{W} = 
+F_{wz}^{W}
+\begin{bmatrix}
+\mu_{L} \\
+\mu_{S}
+\end{bmatrix} = 
+F_{wz}^{W}
+\begin{bmatrix}
+\frac{\lambda_{L}}{\lambda_{TOT}} \\
+\frac{\lambda_{S}}{\lambda_{TOT}}
+\end{bmatrix}
+\mu(\lambda_{TOT})	
+\end{equation}
+From the geometric point of view, in terms of reference frames, we can define the \textit{wheels} forces with the following notation:
+\begin{equation} \label{Force 2nd part}
+\begin{bmatrix}
+F_{wx} \\
+F_{wy}
+\end{bmatrix}^{B} =	
+R_{BW}
+\begin{bmatrix}
+F_{wx} \\
+F_{wy}
+\end{bmatrix}^{W} =
+\begin{bmatrix}
+\cos\delta_{w} & -\sin\delta_{w} \\
+\sin\delta_{w} & \cos\delta_{w}
+\end{bmatrix}
+\begin{bmatrix}
+F_{wx} \\
+F_{wy}
+\end{bmatrix}^{W}
+\end{equation}
+Combining together the equations \ref{Force 1st part} and \ref{Force 2nd part}, we obtain the final expression for the \textit{wheels} forces we employed:
+\begin{equation} \label{Forces}
+\begin{bmatrix}
+F_{wx} \\
+F_{wy}
+\end{bmatrix}^{B} =	
+\begin{bmatrix}
+\cos\delta_{w} & -\sin\delta_{w} \\
+\sin\delta_{w} & \cos\delta_{w}
+\end{bmatrix}
+\frac{F_{wz}^{W} \mu(\lambda_{TOT})}{\lambda_{TOT}}
+\begin{bmatrix}
+\lambda_{L} \\
+\lambda_{S}
+\end{bmatrix}
+\end{equation}
+By processing the above equation \ref{Forces}, we got the two following relations:
+\begin{equation} \label{F_{wy}}
+\begin{split}
+F_{wy}^{B} = 2 [F_{wz}^{W} \mu_{S}\sin\delta_{wr} + (F_{wz}^{W} \mu_{L} + F_{wz}^{W} C_{R}) \cos\delta_{wr}] + \\ + 2 [F_{wz}^{W} \mu_{S}\sin\delta_{wf} + (F_{wz}^{W} \mu_{L} + F_{wz}^{W} C_{R})\cos\delta_{wf}] 
+\end{split}
+\end{equation}
+\begin{equation} \label{F_{wx}}
+\begin{split}
+F_{wx}^{B} = 2 [(F_{wz}^{W} \mu_{L} + F_{wz}^{W} C_{R})\cos\delta_{wr} - F_{wz}^{W} \mu_{S}\sin\delta_{wr}] + \\ + 2 [(F_{wz}^{W} \mu_{L} + F_{wz}^{W} C_{R})\cos\delta_{wf} - F_{wz}^{W} \mu_{S}\sin\delta_{wf}] 
+\end{split}
+\end{equation}
+Regarding the overall \textit{Moments} affecting the vehicle behaviour, we simply considered the ones deriving from the forces we took into account. By multiplying them by their own arms we obtained the following general statement:
+\begin{equation}
+\sum \tau^{B} = \sum r^{B} \sum F_{tire-wheels}^{B}
+\end{equation}
+The evolution of the previous equation, considering only our parameters of interest, is the following one:  
+\begin{equation}
+\begin{split}
+\tau^{B} &= -\omega_{z}\sum_{i=1}^{4} F_{wz_{i}}^{w} \frac{\mu(\lambda_{TOT_{i}})}{\lambda_{TOT_{i}} V_{max}} (r_{x_{i}}^{2} + r_{y_{i}}^{2})- \\ &- V_{OB}\sum_{i=1}^{4} F_{wz_{i}}^{w} \frac{\mu(\lambda_{TOT_{i}})}{\lambda_{TOT_{i}} V_{max}} (- r_{y_{i}} \cos \beta_{u} + r_{x_{i}} \sin\beta_{u})+ \\ &+ ... 
+\end{split}	
+\end{equation}
+where "$ ... $" means all those components which do not depend neither on $\beta_{u}$ nor $\omega_{z}$.
 \section{Linearization Parameters} 
 	With the aim of achieve the proper linearized system for our model, we have analyzed the most critical variables affecting the vehicle itself. As a matter o facts, the overall system behaviour is influenced by many parameters, such as vehicle speed ($V_{OB}$), steering angle of both the front ($\delta_{wf}$) and rear ($\delta_{wr}$) wheels , the $\beta_{u}$ angle, and so on. \\
 	In order to meet our final purpose, we fixed the following parameters as the reference ones for the linearization process:\\
@@ -67,6 +176,7 @@
 			\beta_{u} = \dot{\omega_{z}} = 0
 			\end{cases}
 		\end{equation*}
+	In particular, 
 \section{Errors Definition}
 	Computing the errors means evaluate the dynamic behaviour of the parameters. To make sure we fully clarify what we are going to do, let's define the base elements of each error equation (there follow the ones related to the \textit{states} variable):
 		\begin{itemize}
@@ -100,6 +210,7 @@
 			\end{split}
 		\end{equation}
 	Finally, from the equation \ref{matrices structure}, we obtained the origin of each matrix of our system. Inside the next paragraph we are going to elaborate all the partial derivatives within the equation \ref{matrices structure} in order to find each element for all the matrices.
+
 \section{Linearized System} 
 	Let's begin showing the final Linear Time-Invariant System we got:
 		\begin{equation} \label{LTI}
@@ -108,144 +219,23 @@
 				y = C\tilde{x} 
 			\end{cases}
 		\end{equation}
-	In the next steps, we are going to analyze each matrix appearing within the system \ref{LTI} and the processes we followed to achieve them.
-\subsection{Forces and Momentums}
-	Aiming at describing the vehicle behaviour in a specific situation, we should take into account both the forces and momentums acting on it. \\ Regarding the overall \textit{Forces} typically applied to a generic vehicle, it is possible to split them into three main components: the \textit{gravity} force, the \textit{tire-wheels} forces and the \textit{aerodynamic} ones. In order to simplify our model, as previously said, we have considered some general approximations (see section \ref{approx}, page \pageref{approx}). We will report below the force-related ones:
-		\begin{itemize}
-			\item \textit{Aerodynamic} forces are negligible;
-			\item Null vertical acceleration leads to zero \textit{gravity} force.
-		\end{itemize}
-	Given these assumptions, we have obtained a system characterized only by the \textit{tire-wheels} forces (from now on only "\textit{wheels} forces"). Moreover, since the vertical acceleration is negligible, we have considered only the x and y components of those forces. \\ Generally, the x-component (\textit{Longitudinal} member) is the sum of both rolling and friction resistances, while the y-one (\textit{Side} member) is only due to friction resistance. 
-	Therefore, for each tire-wheel system of the vehicle, we have to eavluate both the components. \\
-	There follow the \textit{wheels} forces acting, respectively, along the x and y-axis of the i-th tire-wheel system:
-		\begin{equation} \label{split e roll}
-			\begin{cases}
-				F_{wx} = F_{Split} + F_{Rolling} = F_{wz} \mu_{L} + F_{wz} C_{R} \\
-				F_{wy} = F_{Split} = F_{wz} \mu_{S}
-			\end{cases}
-		\end{equation}
-	It is important to emphasise that the relation \ref{split e roll} is true for the i-th wheel. In order to achieve the whole \textit{wheels} force acting over the entire vehicle, we should consider it four times. \\ The \textit{Friction Coefficient}, $ \mu $, is defined as follow:
-		\begin{equation}
-			\mu = \mu(\lambda_{TOT})
-		\end{equation}
-	Moreover, we can specify the \textit{Friction Coefficients} related to both the Longitudinal and the Side slip directions as follow:
-		\begin{equation}
-			\begin{cases}
-				\mu_{L} = \mu(\lambda_{TOT}) \frac{\lambda_{L}}{\lambda_{TOT}}\\
-				\mu_{S} = \mu(\lambda_{TOT}) \frac{\lambda_{S}}{\lambda_{TOT}}
-			\end{cases}
-		\end{equation}
-	The \textit{Slip} ratio, instead, is responsible to the friction resistance and it is defined by:
-		\begin{equation}
-			\lambda_{TOT} = \sqrt{\lambda_{L}^{2} + \lambda_{S}^{2}} \leq 1
-		\end{equation}
-	Finally, merging all those concepts together, we arrived to the following notation:	
-		\begin{equation} \label{Force 1st part}
-			\begin{bmatrix}
-				F_{wx} \\
-				F_{wy}
-			\end{bmatrix}^{W} = 
-		F_{wz}^{W}
-			\begin{bmatrix}
-				\mu_{L} \\
-				\mu_{S}
-			\end{bmatrix} = 
-		F_{wz}^{W}
-			\begin{bmatrix}
-				\frac{\lambda_{L}}{\lambda_{TOT}} \\
-				\frac{\lambda_{S}}{\lambda_{TOT}}
-			\end{bmatrix}
-		\mu(\lambda_{TOT})	
-		\end{equation}
-	From the geometric point of view, in terms of reference frames, we can define the \textit{wheels} forces with the following notation:
-		\begin{equation} \label{Force 2nd part}
-			\begin{bmatrix}
-				F_{wx} \\
-				F_{wy}
-			\end{bmatrix}^{B} =	
-		R_{BW}
-			\begin{bmatrix}
-				F_{wx} \\
-				F_{wy}
-				\end{bmatrix}^{W} =
-				\begin{bmatrix}
-				\cos\delta_{w} & -\sin\delta_{w} \\
-				\sin\delta_{w} & \cos\delta_{w}
-			\end{bmatrix}
-			\begin{bmatrix}
-				F_{wx} \\
-				F_{wy}
-			\end{bmatrix}^{W}
-		\end{equation}
-	Combining together the equations \ref{Force 1st part} and \ref{Force 2nd part}, we obtain the final expression for the \textit{wheels} forces we employed:
-		\begin{equation} \label{Forces}
-			\begin{bmatrix}
-		F_{wx} \\
-		F_{wy}
-			\end{bmatrix}^{B} =	
-			\begin{bmatrix}
-				\cos\delta_{w} & -\sin\delta_{w} \\
-				\sin\delta_{w} & \cos\delta_{w}
-			\end{bmatrix}
-				\frac{F_{wz}^{W} \mu(\lambda_{TOT})}{\lambda_{TOT}}
-			\begin{bmatrix}
-				\lambda_{L} \\
-				\lambda_{S}
-			\end{bmatrix}
-		\end{equation}
-	By processing the above equation \ref{Forces}, we got the two following relations:
-		\begin{equation} \label{F_{wy}}
-			\begin{split}
-				F_{wy}^{B} = 2 [F_{wz}^{W} \mu_{S}\sin\delta_{wr} + (F_{wz}^{W} \mu_{L} + F_{wz}^{W} C_{R}) \cos\delta_{wr}] + \\ + 2 [F_{wz}^{W} \mu_{S}\sin\delta_{wf} + (F_{wz}^{W} \mu_{L} + F_{wz}^{W} C_{R})\cos\delta_{wf}] 
-			\end{split}
-		\end{equation}
-		\begin{equation} \label{F_{wx}}
-			\begin{split}
-				F_{wx}^{B} = 2 [(F_{wz}^{W} \mu_{L} + F_{wz}^{W} C_{R})\cos\delta_{wr} - F_{wz}^{W} \mu_{S}\sin\delta_{wr}] + \\ + 2 [(F_{wz}^{W} \mu_{L} + F_{wz}^{W} C_{R})\cos\delta_{wf} - F_{wz}^{W} \mu_{S}\sin\delta_{wf}] 
-			\end{split}
-		\end{equation}
-	Regarding the overall \textit{Momentums} affecting the vehcile behaviour, we simply considered the ones coming from the forces we took into account. By multiplying them by their own arms we obtained the following general statement:
-		\begin{equation}
-			\sum \tau^{B} = \sum r^{B} \sum F_{tire-wheels}^{B}
-		\end{equation}
-	The evolution of the previous equation, considering only our paramenters of interest, is the following one:  
-		\begin{equation}
-			\begin{split}
-				\tau^{B} &= -\omega_{z}\sum_{i=1}^{4} F_{wz_{i}}^{w} \frac{\mu(\lambda_{TOT_{i}})}{\lambda_{TOT_{i}} V_{max}} (r_{x_{i}}^{2} + r_{y_{i}}^{2})- \\ &- V_{OB}\sum_{i=1}^{4} F_{wz_{i}}^{w} \frac{\mu(\lambda_{TOT_{i}})}{\lambda_{TOT_{i}} V_{max}} (- r_{y_{i}} \cos \beta_{u} + r_{x_{i}} \sin\beta_{u})+ \\ &+ ... 
-			\end{split}	
-		\end{equation}
-	where "$ ... $" means all those components which do not depend neither on $\beta_{u}$ nor $\omega_{z}$.
-\subsection{Matrix A}
-	Before showing aech element of matrix A, we  need to remind that we started from the two non-linear equations previoulsy described: \ref{Betaudot} and \ref{omegazdot}, respectively. Moreover, since we started with two \textit{state} variables, we have obtained a matrix A $\in M_{2X2}$.\\ There follow the four elements of matrix A:
+	Inside the next steps, we are going to describe how we got the system \ref{LTI}, the issues we faced with and the solutions we adopted to solve them. We will analyze each single matrix, starting from the initial equations followed by our considerations about them. Moreover, inside the last subsection, we will show even the first ever result we obtained succeeded by our improvements we have implemented afterwards.
+\subsection{Matrix $\mathbf{A}$ - 1° draft}
+	Before showing each element of matrix A, we  need to remind that we started from the two non-linear equations previously described: \ref{Betaudot} and \ref{omegazdot}, respectively. Moreover, since we started with two \textit{state} variables, we have obtained a matrix A $\in M_{2X2}$.\\ There follow the four elements of matrix A:
 		\begin{equation} \label{a11}
-			\begin{split}
-				a_{11} &= \frac{\partial\dot{\beta}_{u}^{B}}{\partial\beta_{u}} = \\ 
-				&= \frac{1}{mV_{OB}}
-					\begin{bmatrix}
-						- \cos\beta_{u} & -\sin\beta_{u}
-					\end{bmatrix}
-					\begin{bmatrix}
-						F_{wx}^{B} \\ F_{wy}^{B}
-					\end{bmatrix}
-				+ \frac{1}{mV_{OB}} 
-					\begin{bmatrix}
-						- \sin\beta_{u} & \cos\beta_{u}
-					\end{bmatrix}
-					\begin{bmatrix}
-						\frac{\partial F_{wx}}{\partial\beta_{u}}^{B} \\ \frac{\partial F_{wy}}{\partial\beta_{u}}^{B}
-					\end{bmatrix}
-			\end{split}
+			a_{11} = \frac{\partial\dot{\beta}_{u}^{B}}{\partial\beta_{u}}\vert_{\beta_{u}=0}  = \frac{1}{mV_{OB}}(F_{wx}^{B} + \frac{\partial F_{wy}^{B}}{\partial\beta_{u}})
 		\end{equation} 
 		\begin{equation} \label{a12}
-			a_{12} = \frac{\partial\dot{\beta}_{u}^{B}}{\partial\omega_{z}} = -1
+			a_{12} = \frac{\partial\dot{\beta}_{u}^{B}}{\partial\omega_{z}}\vert_{\dot\omega_{z}=0} = -1 + \frac{1}{mV_{OB}} (F_{wx}^{B} + \frac{\partial F_{wy}^{B}}{\partial\omega_{z}})
 		\end{equation} 
 		\begin{equation} \label{a21}
-			a_{21} = \frac{\partial\dot{\omega}_{z}^{B}}{\partial\beta_{u}} = \frac{1}{J_{z}} \frac{\partial\tau_{z}^{B}}{\partial\beta_{u}} \vert_{\beta_{u}=0} = -\frac{1}{J_{z}} V_{0B} \sum\limits_{i=1}^4 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}}r_{x_{i}}
+			a_{21} = \frac{\partial\dot{\omega}_{z}^{B}}{\partial\beta_{u}} = \frac{1}{J_{z}} \frac{\partial\tau_{z}^{B}}{\partial\beta_{u}} \vert_{\beta_{u}=0} = -\frac{1}{J_{z}} V_{0B} (\sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}}r_{xf} + \sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}}r_{xr})
 		\end{equation}
 		\begin{equation} \label{a22}
-			a_{22} = \frac{\partial\dot{\omega}_{z}^{B}}{\partial\omega_{z}} = \frac{1}{J_{z}} \frac{\partial\tau_{z}^{B}}{\partial\omega_{z}} = -\frac{1}{J_{z}}\sum\limits_{i=1}^4 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}} (r_{x_{i}}^{2} + r_{y_{i}}^{2}) 
+			a_{22} = \frac{\partial\dot{\omega}_{z}^{B}}{\partial\omega_{z}} = \frac{1}{J_{z}} \frac{\partial\tau_{z}^{B}}{\partial\omega_{z}}\vert_{\dot\omega_{z}=0} = -\frac{1}{J_{z}}(\sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}} (r_{xf}^{2} + r_{yf}^{2}) + \sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}} (r_{xr}^{2} + r_{yr}^{2}))
 		\end{equation}
-	Finally, joining together all the previous components, we got the following matrix A form:
+	By combining together the previous components, we got the first "draft" of matrix A.
+	\begin{comment}
 		\begin{equation}
 			A=
 			\begin{bmatrix}
@@ -253,12 +243,13 @@
 				\frac{\partial\dot{\omega}_{z}^{B}}{\partial\beta_{u}^{B}} & \frac{\partial\dot{\omega}_{z}^{B}}{\partial\omega_{z}^{B}}
 			\end{bmatrix} = 
 			\begin{bmatrix}
-				-\frac{1}{mV_{0B}}\{F_{wx}^{B}\}  & -1  \\
-				-\frac{1}{J_{z}} V_{0B} \sum\limits_{i=1}^4 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}}r_{x_{i}} &  -\frac{1}{J_{z}}\sum\limits_{i=1}^4 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}} (r_{x_{i}}^{2} + r_{y_{i}}^{2}) 
+				-\frac{1}{mV_{0B}}\frac{\partial F_{y}^{B}}{\partial \beta_{u}}  & -1+\frac{1}{mV_{OB}}\frac{\partial F_{y}^{B}}{\partial \beta_{u}}  \\
+				-\frac{1}{J_{z}} V_{0B} (\sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{r_{xf}}{v_{max}} + \sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{r_{xr}}{v_{max}}) &  -\frac{1}{J_{z}}(\sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{(r_{xf}^{2} + r_{yf}^{2})}{v_{max}} + \sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{(r_{xr}^{2} + r_{yr}^{2})}{v_{max}}) 
 			\end{bmatrix}
 		\end{equation}
-\subsection{Matrix $B_{1}$} \label{B1}
-		\begin{equation}
+	\end{comment}
+\subsection{Matrix $\mathbf{B_{1}}$ - 1° draft} 
+		\begin{equation} \label{B1}
 			B_{1}=
 			\begin{bmatrix} 
 				\frac{\partial\dot{\beta}_{u}^{B}}{\partial\delta_{r}^{B}} \\
@@ -269,7 +260,7 @@
 				\frac{1}{J_{z}} \frac{\partial \tau_{z}^{B}}{\partial\delta_{wr}} = \frac{1}{J_{z}} \{ \sum\limits_{i=1}^4 C_{R}F_{wz_{i}}^{w} r_{x_{i}} + \sum\limits_{i=1}^4 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{\omega_{i} r}{v_{max}}r_{x_{i}} \}
 			\end{bmatrix}
 		\end{equation} 
-	In order to better clarify the equation \ref{B1}, there will follow the forces s partial derivatives components computed without imposing the initial conditions. By doing so, we kept all the parameters of interest inside these equations. In this way, we were able to study the vehicle behaviour simply by changing these parameters inside the model MATLAB code and analyzing the correspondent conseguences. \\ There will follow the x-relative partial derivatives formulas: 
+	In order to better clarify the equation \ref{B1}, there will follow the forces s partial derivatives components computed without imposing the initial conditions. By doing so, we kept all the parameters of interest inside these equations. In this way, we were able to study the vehicle behaviour simply by changing these parameters inside the Matlab code and analyzing the correspondent consequences. \\ There will follow the x-relative partial derivatives formulas: 
 		\begin{equation} \label{Fwx su deltaR }
 			\begin{split}
 				\frac{\partial F_{wx}^{B}}{\partial \delta_{wr}} &= 2 [\frac{\partial F_{wz}^{W}}{\partial \delta_{wr}} (\mu_{L}+C_{R}) \cos\delta_{wr} - F_{wz}^{W} (\mu_{L}+C_{R})\sin\delta_{wr} - \\
@@ -294,7 +285,7 @@
 				\frac{\partial F_{wy}^{B}}{\partial \delta_{wf}} &= 2 [\frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} \mu_{S} \sin \delta_{wr} + \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} (\mu_{L}+C_{R}) \cos\delta_{wr} + \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} \mu_{S} \sin \delta_{wf}+ \\ &+ \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} (\mu_{L}+C_{R})\cos\delta_{wf} - F_{wz}^{W} (\mu_{L}+C_{R}) \sin\delta_{wf}]
 			\end{split}
 		\end{equation}
-\subsection{Matrix $B_{2}$}
+\subsection{Matrix $\mathbf{B_{2}}$ - 1° draft}
 	Considering that our \textit{disturbance} variable ($\delta_{wf}$) is always a steering angle as the \textit{control} one ($\delta_{wr}$), the processing phase of Matrix $B_{2}$ was exactly the same as the Matrix $B_{1}$ one. \\ The final result is reported down here:
 		\begin{equation}
 			B_{2}=
@@ -317,3 +308,58 @@
 				0 & 1
 			\end{bmatrix}
 		\end{equation}
+\subsection{Final Matrices: $\mathbf{A}$, $\mathbf{B_{1}}$, $\mathbf{B_{2}}$}
+We start this subsection showing our first ever result we obtained by simulating our vehicle model, described inside the previous subsections, over the pre-defined simulator. 
+%\begin{figure} \label{FR traj}
+%	\centering
+%	\includegraphics[scale=0.5]{../Images/LinSyst/FakeRes_Trj}
+%	\caption{First ever result - Trajectories}
+%\end{figure}
+
+\begin{figure} \label{FR ref}
+	\centering
+	\includegraphics[scale=0.38]{../Images/LinSyst/FakeRes}
+	\caption{First ever result - References}
+\end{figure}
+
+The main problem we noticed was about the differences, in terms of absolute values, between our vehicle model's physical parameters and the pre-defined ones inside the simulator. As a matter of facts, the car included inside the simulator was characterized by different technical parameters, such as weight, center of mass location, moment of inertia and so on. Therefore, our first result was strongly influenced by this technical difference to such an extent that the final vehicle behaviour was not the optimal one.
+\begin{figure}[b] \label{VehicleScheme}
+	\centering
+	\includegraphics[scale=0.065]{../Images/LinSyst/SchemaAssi}
+	\caption{Wheels-axis}
+\end{figure}
+Finally, joining together both the last concepts and the \textit{1° draft} versions of the matrices $A$, $B_{1}$ and $B_{2}$, we got the following final results:
+\begin{equation}
+	A=
+	\begin{bmatrix}
+		\frac{\partial\dot{\beta}_{u}^{B}}{\partial\beta_{u}^{B}} & \frac{\partial\dot{\beta}_{u}^{B}}{\partial\omega_{z}^{B}} \\
+		\frac{\partial\dot{\omega}_{z}^{B}}{\partial\beta_{u}^{B}} & \frac{\partial\dot{\omega}_{z}^{B}}{\partial\omega_{z}^{B}}
+	\end{bmatrix} = 
+	\begin{bmatrix}
+		\frac{-(C_{f} + C_{r})}{mV_{0B}} & -1 -\frac{C_{f}r_{xf} + C_{r}r_{xr}}{m V_{0B}^{2}} \\ 
+		-\frac{(C_{f}r_{xf} + C_{r}r_{xr})}{J_{z}} & -\frac{(C_{f}l_{f}^{2} + C_{r}l_{r}^{2})}{J_{z} V_{0B}}
+	\end{bmatrix}
+\end{equation}
+The $B_{1}$ matrix became the following one:
+\begin{equation} 
+B_{1}=
+\begin{bmatrix} 
+\frac{\partial\dot{\beta}_{u}^{B}}{\partial\delta_{r}^{B}} \\
+\frac{\partial\dot{\omega}_{z}^{B}}{\partial\delta_{r}^{B}}
+\end{bmatrix} =
+\begin{bmatrix} 
+\frac{C_{r}}{m V_{0B}} \\ \frac{C_{r}r_{xr}}{J_{z}}
+\end{bmatrix} 
+\end{equation}
+The $B_{2}$ matrix became the following one:
+\begin{equation}
+B_{2}=
+\begin{bmatrix}
+\frac{\partial\dot{\beta}_{u}^{B}}{\partial\delta_{f}^{B}} \\
+\frac{\partial\dot{\omega}_{z}^{B}}{\partial\delta_{f}^{B}} 
+\end{bmatrix} =
+\begin{bmatrix}
+\frac{C_{f}}{m V_{0B}} \\ \frac{C_{f}r_{xf}}{J_{z}}
+\end{bmatrix} 
+\end{equation}
+
