@@ -34,10 +34,10 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     delta = [ deltaF deltaF deltaR deltaR ];
 
     % Wheel displacements with respect to the Center of Mass
-    rxf = vehicle.FrontAxlePositionfromCG;  % Front Wheels X Axis Offset (Length)
-    rxr = -(vehicle.RearAxlePositionfromCG);   % Rear Wheels X Axis Offset (Length)
-    ryf = vehicle.TrackWidth/2;                             % All Wheels Y Axis Offset (Width)
-    rz = -(vehicle.HeightCG);               % All Wheels Z Axis Offset (Height)
+    rxf = vehicle.FrontAxlePositionfromCG;      % Front Wheels X Axis Offset
+    rxr = -(vehicle.RearAxlePositionfromCG);    % Rear Wheels X Axis Offset
+    ryf = vehicle.TrackWidth/2;                 % All Wheels Y Axis Offset
+    rz = -(vehicle.HeightCG);                   % All Wheels Z Axis Offset
 
     rx = [rxf rxf rxr rxr];
     ry = [ryf -ryf -ryf ryf];
@@ -55,7 +55,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     Iz = vehicle.YawMomentInertia;
 
     if V0 < 1       % Divide-by-Zero safeguard
-        V0 = 1
+        V0 = 1;
     end
     V0 = V0/3.6;    % [km/h] --> [m/s]
 
@@ -66,13 +66,15 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     % Forces system
     dfwzdr = 0;
     dfwzdf = 0;
+    dFydbetaU = -muL0*(Fwz*4);
     dFwydr = 2*(dfwzdr*muS*sin(deltaR)+Fwz*muS*cos(deltaR)+dfwzdr*(muL0+CR)*cos(deltaR)+Fwz*(muL0+CR)*sin(deltaR)+dfwzdr*muS*sin(deltaF)+dfwzdr*(muL0+CR)*cos(deltaF));
     dFwydf = 2*(dfwzdf*muS*sin(deltaR)+dfwzdf*(muL0+CR)*cos(deltaR)+dfwzdf*muS*sin(deltaF)+Fwz*muS*cos(deltaF)-Fwz*(muL0+CR)*sin(deltaF)+dfwzdf*(muL0+CR)*cos(deltaF));
     dFwxdr = 2*(dfwzdr*(muL0+CR)*cos(deltaR)-Fwz*(muL0+CR)*sin(deltaR)-dfwzdr*muS*sin(deltaR)-Fwz*muS*cos(deltaR)-dfwzdr*muS*sin(deltaF)+dfwzdr*(muL0+CR)*cos(deltaF));
     dFwxdf = 2*(dfwzdf*(muL0+CR)*cos(deltaR)-dfwzdf*muS*sin(deltaR)+dfwzdf*(muL0+CR)*cos(deltaF)-Fwz*(muL0+CR)*sin(deltaF)-dfwzdf*muS*sin(deltaF)+Fwz*muS*cos(deltaF));
 
-    a11 = (1/(m*V0))*(-cos(betaU0)*Fwx-sin(betaU0)*Fwy);
-    a12 = -1+(1/(m*V0))*((2*muL0)/V0*(Fwz*rxf+Fwz*rxr));
+    %a11 = (1/(m*V0))*(-cos(betaU0)*Fwx-sin(betaU0)*Fwy)+(1/(m*V0))*(-sin(betaU0)*(dFwxdbeta)+cos(betaU0)*(dFwydbeta));
+    a11 = (1/(m*V0))* dFydbetaU;
+    a12 = -1+(1/(m*V0))*(((2*muL0)/V0)*(Fwz*rxf+Fwz*rxr));
     a21 = -V0/Iz*(2*Fwz*muL0*(rxf+rxr)/V0);
     a22 = -1/Iz*(2*Fwz*muL0*(2*(rxf^2 + ryf^2)+2*(rxr^2+ryf^2))/V0);
 
@@ -82,7 +84,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     eigenvalues = eig(A);
     Re = real(eigenvalues);
     if Re(1)<0 && Re(2)<0
-          disp('The matrix A is Hurwitz.')
+          disp('The matrix A is Hurwitz.');
     end
 
     b111 = 1/(m*V0)*(-sin(betaU0)*dFwxdr+cos(betaU0)*dFwydr);
@@ -92,7 +94,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     % System Reachability
     Reachable = [B1 A*B1];
     if rank(Reachable) == 2
-        disp('The state space is completely reachable.')
+        disp('The state space is completely reachable.');
     end
 
     b211 = 1/(m*V0)*(-sin(betaU0)*dFwxdf+cos(betaU0)*dFwydf);
