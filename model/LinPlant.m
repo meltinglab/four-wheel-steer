@@ -34,10 +34,10 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     delta = [ deltaF deltaF deltaR deltaR ];
 
     % Wheel displacements with respect to the Center of Mass
-    rxf = vehicle.FrontAxlePositionfromCG;  % Front Wheels X Axis Offset (Length)
-    rxr = -(vehicle.RearAxlePositionfromCG);   % Rear Wheels X Axis Offset (Length)
-    ryf = vehicle.TrackWidth/2;                             % All Wheels Y Axis Offset (Width)
-    rz = -(vehicle.HeightCG);               % All Wheels Z Axis Offset (Height)
+    rxf = vehicle.FrontAxlePositionfromCG;      % Front Wheels X Axis Offset
+    rxr = -(vehicle.RearAxlePositionfromCG);    % Rear Wheels X Axis Offset
+    ryf = vehicle.TrackWidth/2;                 % All Wheels Y Axis Offset
+    rz = -(vehicle.HeightCG);                   % All Wheels Z Axis Offset
 
     rx = [rxf rxf rxr rxr];
     ry = [ryf -ryf -ryf ryf];
