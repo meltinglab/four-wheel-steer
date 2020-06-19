@@ -23,6 +23,9 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 	These scenarios, called \emph{Reference Applications}, share a common \mwSL{} project with convoluted scripting behind the scenes, to ensure proper settings
 	when switching maneuvers. Furthermore, each subsystem provides different variants that allows for different interchangeable car types, components and environmental
 	conditions to be easily selected through the \emph{Variant Manager}.
+	\begin{center}
+		\includegraphics[width=0.9\textwidth]{Images/Simulator/sim-full}
+	\end{center}
 
 
 		\subsection{Passenger Vehicle}
@@ -51,6 +54,9 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 
 		In the \emph{Controller} block are housed all the typical electronic control units found on modern cars. The most typical one is the \emph{Anti-lock Braking System},
 		but there are also the differential control and others. 
+		\begin{center}
+			\includegraphics[width=0.9\textwidth]{Images/Simulator/ctrl-full}
+		\end{center}
 
 		Even though physically separated from the rest of the vehicle model, it is tightly coupled with that one, as it would be in the real world. As said before, any of these ECUs
 		can be enabled through the corresponding variants.
@@ -74,12 +80,31 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		Here is where the director leads the orchestra. Despite the humble name, the \emph{Reference Generator} does much more than simply provide the reference path
 		to the driver. It actually offers the main settings panel for selecting the type of maneuver, the 3D scenario and the simulated vehicle model, the cruise speed and specific
 		maneuver parameters. In the background, each callback to the scripts changes accordingly the remaining blocks of the simulator to meet the requests.
+		\begin{center}
+			\includegraphics[height=0.3\textheight]{Images/Simulator/sim-refgen-cfg}
+		\end{center}
 
 
 		\subsection{Visualizer}
 
 		The last component of the simulator is the \emph{Visualizer}, the most user-friendly of them all. Apart from collecting each and every useful signal from the whole system,
-		the Visualizer offers a real-time dashboard showing the state of the car. It also implements all the machinery required to interface with the Unreal Engine 4 for realistic
+		the Visualizer offers a real-time dashboard showing the state of the car.
+		\begin{figure}
+			\centering
+			\subfloat[][]{\includegraphics[height=0.12\textheight]{Images/Simulator/vis-dash-drv}}\quad
+			\subfloat[][]{\includegraphics[height=0.12\textheight]{Images/Simulator/vis-dash-veh}}
+		\caption{Detail of the real-time dashboard}
+		\label{fig:vis-dash}
+		\end{figure}
+%		\begin{figure}
+%			\centering
+%			\subfloat[][]{\includegraphics[width=0.45\textwidth]{Images/Simulator/vis-dash-drv}}\\
+%			\subfloat[][]{\includegraphics[width=0.45\textwidth]{Images/Simulator/vis-dash-veh}}
+%		\caption{Detail of the real-time dashboard}
+%		\label{fig:vis-dash}
+%		\end{figure}
+
+		It also implements all the machinery required to interface with the Unreal Engine 4 for realistic
 		3D visualization of the whole action.
 
 
@@ -100,6 +125,13 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		for all four wheel angles, among others. This helped a lot, since we just had to arrange a dedicated \emph{Kinematic Steering} for the rear wheels inside the
 		\emph{Driveline}, replace the grounded wheel signal with its output and finally route the input up to our control unit (see below), following all translation stages and bus
 		aggregations.
+		\begin{figure}
+			\centering
+			\subfloat[][Rear Steering signal routing]{\includegraphics[width=0.45\textwidth]{Images/Simulator/veh-drvln-steer}}\quad
+			\subfloat[][Body model adaptation]{\includegraphics[width=0.45\textwidth]{Images/Simulator/veh-body-detail}}
+		\caption{}
+		\label{}
+		\end{figure}
 
 		The Kinematic Steering for the rear wheels is set to a ratio of 1:1 for direct wheel control, while saturating the maximum steering range according to the
 		\lstinline{rngRearSteer} parameter in \texttt{model/SimRoutine.m} (the default range is $\pm\ang{5}$). A counterintuitive setting is the \emph{Front} option,
@@ -118,18 +150,16 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		Inside \texttt{model/Controller.slx} the actual control block --- a \emph{\mwML{} Function} --- communicates with the outside world through two translation blocks.
 		These subsystems take care of proper unit conversion and reference frame translation, as the whole simulator is built around a down-pointing frame, while we felt
 		more comfortable with the usual choice of the Z axis pointing against gravity. Luckily, the signals involved include only yaw angles and changing the sign does the job.
+		\begin{center}
+			\includegraphics[width=0.9\textwidth]{Images/Simulator/a4ws-full}
+		\end{center}
 
 		The beefy part of the controller is inside the function block \lstinline{OptCtrl} and as the name suggest it is where the state fed back to the system scaled by a scale matrix,
 		obtained through optimal control as described in \vref{sec:vs-ctrl}. Prior to this, two important action are performed.
 		First, the right gain coefficients are picked from the look-up table \lstinline{Klut}, according to the mean-value of the current front wheel angles and the speed.
 		To avoid harmful glitches, there is a hysteretic mechanism that switches to another gain matrix K only if the threshold has been crossed with enough margin.
-		The settings for these threshold can be found at the very beginning of \texttt{model/SimRoutine.m} (see \ref{lst:vs-thrs}).
-		\begin{figure}
-			\centering
-			\lstinputlisting[firstline=9, lastline=15, firstnumber=9]{../../../model/SimRoutine.m}
-			\caption{LUT settings, \texttt{model/SimRoutine.m}}
-			\label{lst:vs-thrs}
-		\end{figure}
+		The settings for these threshold can be found at the very beginning of \texttt{model/SimRoutine.m}:
+		\lstinputlisting[firstline=9, lastline=15, firstnumber=9]{../../../model/SimRoutine.m}
 		The threshold is expressed in percentage over one division of the full range. The inner workings of this selection process are made available at the \lstinline{info} port
 		and features two sets of seven values for the true value, the quantized one, the would-be index and the upper and lower values for both the division boundaries and
 		the thresholds.
@@ -169,6 +199,9 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		The time delay is to let the speed build up before system excitation. For the more articulated maneuvers, the steering profile is obtained by a chain of step generators
 		compensating each other at different time steps. It's a crude yet effective way to lay a pattern and despite the unrealistic step variation of the steering, this ensures that
 		good results could only improve with smoother excitation.
+		\begin{center}
+			\includegraphics[width=0.9\textwidth]{Images/Simulator/cm-s-full}
+		\end{center}
 
 
 		\subsection{Environment}
@@ -177,7 +210,7 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		Even if logically implemented in distinct sub-blocks, we list them altogether:
 		\begin{description}
 
-			\item[No Wind] The aerodynamic force is completely suppresed;
+			\item[No Wind] The aerodynamic force is completely suppressed;
 
 			\item[Lateral] The vehicle is subject to a constant wind, blowing in the negative lateral direction;
 
@@ -193,6 +226,13 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		
 		Again, these disturbances kick in few seconds after the maneuver is initiated, to let the vehicle build up some spin and make the effect more dramatic.
 		As usual, model variants lets the two phenomena combine together at will.
+		\begin{figure}
+			\centering
+			\subfloat[][\lstinline{Environment} block]{\includegraphics[width=0.55\textwidth]{Images/Simulator/env-full}}\quad
+			\subfloat[][\lstinline{Wind Burst} sub-block]{\includegraphics[width=0.35\textwidth]{Images/Simulator/env-wind-burst}}
+		\caption{}
+		\label{}
+		\end{figure}
 
 
 	\section{Control}
