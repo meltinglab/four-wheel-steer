@@ -154,18 +154,23 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 			\includegraphics[width=0.9\textwidth]{Images/Simulator/a4ws-full}
 		\end{center}
 
-		The beefy part of the controller is inside the function block \lstinline{OptCtrl} and as the name suggest it is where the state fed back to the system scaled by a scale matrix,
-		obtained through optimal control as described in \vref{sec:vs-ctrl}. Prior to this, two important action are performed.
+		The beefy part of the controller is inside the function block \lstinline{optRear} and, as the name suggests, it is where the state is fed back to the system scaled by a scale
+		matrix, obtained through optimal control as described in \vref{sec:vs-ctrl}. Prior to this, two important action are performed.
 		First, the right gain coefficients are picked from the look-up table \lstinline{Klut}, according to the mean-value of the current front wheel angles and the speed.
 		To avoid harmful glitches, there is a hysteretic mechanism that switches to another gain matrix K only if the threshold has been crossed with enough margin.
-		The settings for these threshold can be found at the very beginning of \texttt{model/SimRoutine.m}:
-		\lstinputlisting[firstline=9, lastline=15, firstnumber=9]{../../../model/SimRoutine.m}
-		The threshold is expressed in percentage over one division of the full range. The inner workings of this selection process are made available at the \lstinline{info} port
-		and features two sets of seven values for the true value, the quantized one, the would-be index and the upper and lower values for both the division boundaries and
-		the thresholds.
+		\lstinputlisting[firstline=7, lastline=41, firstnumber=7]{Images/Simulator/a4ws-code.m}
+		The inner workings of this selection process are made available at the \lstinline{info} port and features two sets of seven values for the true value, the quantized one,
+		the would-be index and the upper and lower values for both the division boundaries and the thresholds.
+		\lstinputlisting[firstline=43, lastline=43, firstnumber=43]{Images/Simulator/a4ws-code.m}
 		
-		The second step is to extract the instantaneous equilibrium point by inverting on-the-fly matrix $A$, to adapt the reference signals to external conditions as well.
-		Once the controller have all the ingredients ready, the usual operation $u = -Kx$ is performed and returned at the output.
+		The settings for these threshold, expressed in percentage over one division of the full range, can be found at the very beginning of \texttt{model/SimRoutine.m}:
+		\lstinputlisting[firstline=9, lastline=15, firstnumber=9]{../../../model/SimRoutine.m}
+		
+		The second step is to extract the instantaneous equilibrium point by inverting on-the-fly the matrix $A$, to adapt the reference signals to external conditions as well:
+		\lstinputlisting[firstline=46, lastline=86, firstnumber=46]{Images/Simulator/a4ws-code.m}
+		
+		Once the controller have all the ingredients ready, the usual operation $u = -Kx$ is performed and returned at the output:
+		\lstinputlisting[firstline=90, firstnumber=90]{Images/Simulator/a4ws-code.m}
 
 
 		\subsection{Custom Maneuver}
@@ -238,11 +243,18 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 	\section{Control}
 	\label{sec:vs-ctrl}
 
-	The last, crucial component that completes our project are a set of scripts that perform calculus and drive the simulator to obtain the resulting data.
-	The entry point for the whole simulation is \texttt{model/SimScript.m}, which extracts vehicle parameters from the model workspace, sets some constants for the size and
-	resolution of the control look-up tables (see \ref{ssec:vs-int-ctrl}), hands all the parameters to the optimization engine and finally launches the simulations sequence plotting
-	the results. Its expansion \texttt{model/SimRoutine2.m} automates the simulation for different environmental conditions.
+	The last, crucial component that completes our project is a set of scripts that perform calculus and drive the simulator to obtain the resulting data.
+	The entry point for the whole simulation is \texttt{model/SimScript.m}, which first extracts vehicle parameters from the model workspace and sets some constants for the size and
+	the resolution of the control look-up tables (as seen in \ref{ssec:vs-int-ctrl}):
+	\lstinputlisting[firstline=7, lastline=19, firstnumber=7]{../../../model/SimRoutine.m}
+	Then, it hands all the parameters to the optimization engine:
+	\lstinputlisting[firstline=21, lastline=22, firstnumber=21]{../../../model/SimRoutine.m}
+	Finally, the simulation sequence is launched:
+	\lstinputlisting[firstline=25, lastline=29, firstnumber=25]{../../../model/SimRoutine.m}
+	The rest of the code formats the output data and plots the results. Its expansion \texttt{model/SimRoutine2.m} automates the simulation for different environmental conditions.
 	
 	The optimization engine takes an intermediate step inside \texttt{model/LUTScript.m}, which populates the look-up table used by the controller with the gain coefficients.
-	These are obtained from subsequent invocations of \texttt{model/LinPlant.m}, where the vehicle body dynamics are linearized around the provided point and control law
+	These are obtained from subsequent invocations of \texttt{model/LinPlant.m}:
+	\lstinputlisting[firstline=1, firstnumber=1]{../../../model/LUTScript.m}
+	Here the vehicle body dynamics are linearized around the provided point and control law
 	parameters are calculated through \emph{Optimal Control} methods, namely the \lstinline{lqr} \mwML{} function.
