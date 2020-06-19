@@ -14,6 +14,7 @@
 \usepackage[italian,english]{babel}
 
 \usepackage{indentfirst}
+%\frenchspacing
 
 % Limit section numbering and table of contents depths
 \setcounter{secnumdepth}{1}
@@ -33,24 +34,20 @@
 \fancyfoot[LO,RE]{\thepage}
 
 
-\usepackage{version}
-
-\usepackage{epsfig}
-
-
 % Scientific
 \usepackage{amsmath,amssymb}
-\usepackage{amscd}
+%\usepackage{amscd}
 \usepackage{siunitx}
 
-% Grafic stuff
+% Graphic stuff
 \usepackage[usenames,dvipsnames]{xcolor}
 
 \usepackage{graphicx}
 \graphicspath{{Images/}}
 
-\usepackage{hologo}
-\frenchspacing
+%\usepackage{rotating}
+
+%\usepackage{hologo}
 
 % Source code display
 \usepackage{matlab-prettifier}
@@ -68,22 +65,23 @@
 }
 
 
-\usepackage{rotating}
-
 % References
 \usepackage[english]{varioref}		% Pretty cross-references
 %\usepackage{showkeys}			% Label debug only. Comment for final release!
 
+\usepackage{comment}
+
 \usepackage{caption}
-\captionsetup{labelformat=empty,textfont=sl}
+%\captionsetup{labelformat=empty,textfont=sl}
+\captionsetup{font=small,labelfont={sf,bf}}
 \usepackage{subcaption}
 
-\usepackage{multirow}
-\usepackage{picture}
-\numberwithin{figure}{section}		% <--- ???
+%\usepackage{multirow}
+%\usepackage{picture}
+%\numberwithin{figure}{section}		% <--- ???
 
 % Bring hyperlinks to life
-\usepackage[colorlinks,bookmarks]{hyperref}
+\usepackage[colorlinks,bookmarks,linktoc=all]{hyperref}
 %\usepackage{bookmarks}
 
 % Hyperref has to be the LAST package loaded, yet BEFORE geometry
@@ -121,7 +119,10 @@
 
 	\input{Chapters/Abstract}
 
-	\tableofcontents
+	\begingroup
+		\hypersetup{hidelinks}
+		\tableofcontents
+	\endgroup
 
 	\input{Chapters/Intro}
 	\input{Chapters/SystemLinearization}
