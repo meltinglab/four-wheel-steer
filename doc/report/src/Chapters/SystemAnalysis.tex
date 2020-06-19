@@ -13,7 +13,7 @@
 	During the design phase of our system model, we chose to directly include an automatic function computing the equation \ref{eq.Eigenvalues}. In particular, inside the Matlab file "LinPlant", we have reserved few lines of code both to perform the algebraic calculation and to display the final result directly to the user. Looking at the figure \ref{stability}, it is possible to see how we have implemented such a function.\\ With the aim of informing the user about the correctness of the algebraic computation, we display the sentence highlighted in purple. Once the real part of all the eigenvalues of a matrix is strictly negative, the matrix itself is declared "Hurwitz".
 	\begin{figure}
 		\centering
-		\lstinputlisting[caption={[Eigenvalues]}, firstline=81, lastline=86, firstnumber=81]{../../../model/LinPlant.m}
+		\lstinputlisting[caption={[Eigenvalues]}, firstline=83, lastline=88, firstnumber=83]{../../../model/LinPlant.m}
 		\caption{Lin Plant - Stability}
 		\label{stability}
 	\end{figure}    
@@ -22,7 +22,7 @@
 	Making readable those kind of information can be really useful, for the user, in order to better understand what the control system is actually doing.
 	\begin{figure}
 		\centering
-		\lstinputlisting[caption={[Reachability]}, firstline=92, lastline=96, firstnumber=92]{../../../model/LinPlant.m}
+		\lstinputlisting[caption={[Reachability]}, firstline=94, lastline=98, firstnumber=94]{../../../model/LinPlant.m}
 		\caption{Lin Plant - State Space Reachability}
 		\label{reachability}
 	\end{figure}
@@ -58,4 +58,4 @@
 	A^{-1}[- B_{2} \tilde\delta_{wf}]
 	\end{equation}
 	From the equation \ref{eq points} we got our equilibrium points, $\beta_{uEQ}$ and $\omega_{zEQ}$,these equilibrium points are different from the linearization points that we computed at the beginning, while we were defining the linearized system. Given that our objective is to obtain a stable system, we then applied trajectory tracking to keep the system around these states.\\
-	Our first attempt at computing the equilibrium points was positioned at startup of the system, in the sense that we computed them shortly after the linearization of the system, this means using a discrete $\delta_{f_{0}}$ and a discrete $V_{0}^B}$. Later on we understood that the inverse of a 2x2 matrix wasn't too heavy for a microcontroller and we moved the computation of the equilibrium states to our realtime controller. In this way we don't have anymore a discrete recollection of equilibrum states, instead we extract the current $\delta_{f}$ and $V^B$ from the simulator and we obtain a continuous function of the equilibrium states over time.
+	Our first attempt at computing the equilibrium points was positioned at startup of the system, in the sense that we computed them shortly after the linearization of the system, this means using a discrete $\delta_{f_{0}}$ and a discrete $V_{0}^B$. Later on we understood that the inverse of a 2x2 matrix wasn't too heavy for a microcontroller and we moved the computation of the equilibrium states to our realtime controller. In this way we don't have anymore a discrete recollection of equilibrum states, instead we extract the current $\delta_{f}$ and $V^B$ from the simulator and we obtain a continuous function of the equilibrium states over time.

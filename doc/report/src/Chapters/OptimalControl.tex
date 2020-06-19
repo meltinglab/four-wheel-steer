@@ -63,6 +63,9 @@ This extraction is not done in real time, due to the relatively high computation
 Obviously, given the discrete nature of the lookup table, it will not be possible to have a perfect match for the actual disturbances of the vehicle that span across a continuous space, so we will have to approximate to the nearest point of linearization. It will be anyway a better approximated solution with respect to a system with a single linearization point and a single K.\\
 Another reason why we have devoted one script for the extraction of K matrices and another one for the computation of realtime control is that you can't generate C code using matlab coder or even a simulink block with Matlab code containing the lqr algorhytm present in the control system toolbox. We needed to keep it separate.\\
 Anyway due to the continuous variation of the equilibrium states, we dont'have big problems on the steep variation of controls.
+\begin{figure}[!h]
+\includegraphics[width=\linewidth]{../Images/KLut.jpg}\caption{Excerpt of K Lookup Table}
+\end{figure}
 \section{Saturation of control and states}
 As we have already written, we saturate the control to a physically feasible range of steering, but this is not enough, because if the results of the lqr algorithm in computing $\omega_{z_{ref}}$ or $\beta_{u_{ref}}$ are out of any phisycally possible range our control will always be saturated, thus not exercising the control that we should expect from it. For this reason we apply a saturation of the states, dependent on the velocity of the vehicle, like the one implemented in the ESP example.
 \section{Resulting Control}

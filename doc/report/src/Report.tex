@@ -3,18 +3,24 @@
 % !TEX spellcheck = en-US
 % !TEX root = Report.tex
 
-\documentclass[a4paper,11pt,titlepage,hidelinks]{report}
-\pdfpagewidth
-\paperwidth
-\pdfpageheight
-\paperheight
+\documentclass[a4paper,11pt,titlepage]{report}
+%\pdfpagewidth
+%\paperwidth
+%\pdfpageheight
+%\paperheight
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[italian,english]{babel}
 
-\usepackage{epsfig}
+\usepackage{indentfirst}
+%\usepackage{microtype}
 
+% Limit section numbering and table of contents depths
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
+
+% Custom header and footer
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 
@@ -27,24 +33,31 @@
 \fancyfoot{}
 \fancyfoot[LO,RE]{\thepage}
 
-\usepackage{amsmath,amssymb}
-\usepackage{amscd}
 
 \usepackage{version}
 
+\usepackage{epsfig}
+
+
+% Scientific
+\usepackage{amsmath,amssymb}
+\usepackage{amscd}
+\usepackage{siunitx}
+
+% Grafic stuff
 \usepackage[usenames,dvipsnames]{xcolor}
 
 \usepackage{graphicx}
 \graphicspath{{Images/}}
 
 \usepackage{hologo}
-\frenchspacing
+%\frenchspacing
 
 % Source code display
 \usepackage{matlab-prettifier}
 \lstset{
 	style = Matlab-editor,
-	basicstyle = \mlttfamily,
+	basicstyle = \small\mlttfamily,
 %	tabsize = 2,
 	frame = leftline,
 	numbers=left,
@@ -58,16 +71,21 @@
 
 \usepackage{rotating}
 
+% References
+\usepackage[english]{varioref}		% Pretty cross-references
+%\usepackage{showkeys}			% Label debug only. Comment for final release!
+
 \usepackage{caption}
 \captionsetup{labelformat=empty,textfont=sl}
 \usepackage{subcaption}
 
 \usepackage{multirow}
 \usepackage{picture}
-\numberwithin{figure}{section}
+\numberwithin{figure}{section}		% <--- ???
 
 % Bring hyperlinks to life
-\usepackage{hyperref}
+\usepackage[colorlinks,bookmarks]{hyperref}
+%\usepackage{bookmarks}
 
 % Hyperref has to be the LAST package loaded, yet BEFORE geometry
 \usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
@@ -78,6 +96,10 @@
 %\headheight0mm
 %\oddsidemargin0mm
 %\evensidemargin0mm
+
+
+% Custom A4WS macros and aliases
+\usepackage{a4ws-aliases}
 
 
 \title{Hello trolls!}
@@ -97,6 +119,8 @@
 \begin{document}
 
 	\maketitle
+
+	\input{Chapters/Abstract}
 
 	\tableofcontents
 
