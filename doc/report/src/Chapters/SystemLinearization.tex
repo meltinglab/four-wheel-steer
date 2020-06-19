@@ -211,16 +211,17 @@ where "$ ... $" means all those components which do not depend neither on $\beta
 		\end{equation}
 	Finally, from the equation \ref{matrices structure}, we obtained the origin of each matrix of our system. Inside the next paragraph we are going to elaborate all the partial derivatives within the equation \ref{matrices structure} in order to find each element for all the matrices.
 
-\section{Linearized System} 
-	Let's begin showing the final Linear Time-Invariant System we got:
+\section{1st Linearized System} \label{1stLinSyst}
+	Before starting this section, we will directly show the final structure of our Linear Time-Invariant System we got:
 		\begin{equation} \label{LTI}
 			\begin{cases}
 				\dot{\tilde{x}} = A \tilde{x} + B_{1}\tilde{u} + B_{2}\tilde{d}\\
 				y = C\tilde{x} 
 			\end{cases}
 		\end{equation}
-	Inside the next steps, we are going to describe how we got the system \ref{LTI}, the issues we faced with and the solutions we adopted to solve them. We will analyze each single matrix, starting from the initial equations followed by our considerations about them. Moreover, inside the last subsection, we will show even the first ever result we obtained succeeded by our improvements we have implemented afterwards.
-\subsection{Matrix $\mathbf{A}$ - 1° draft}
+	Moreover, inside the next subsections, we are going to describe how we got the 1st version of the above LTI system. It is important to notice that, during the overall design process of our vehicle model, we always kept the system \ref{LTI}'s form as the reference one. 
+	We will analyze each single matrix, starting from the initial equations followed by our considerations on the parameters the matrices include within them. Furthermore, inside the following section \ref{Final LTI} pag. \pageref{Final LTI}, we will show even the first ever result we obtained considering the 1st LTI system, succeeded by both the issues we faced with and the solutions we adopted to solve them.
+\subsection{Matrix $\mathbf{A}$}
 	Before showing each element of matrix A, we  need to remind that we started from the two non-linear equations previously described: \ref{Betaudot} and \ref{omegazdot}, respectively. Moreover, since we started with two \textit{state} variables, we have obtained a matrix A $\in M_{2X2}$.\\ There follow the four elements of matrix A:
 		\begin{equation} \label{a11}
 			a_{11} = \frac{\partial\dot{\beta}_{u}^{B}}{\partial\beta_{u}}\vert_{\beta_{u}=0}  = \frac{1}{mV_{OB}}(F_{wx}^{B} + \frac{\partial F_{wy}^{B}}{\partial\beta_{u}})
@@ -234,7 +235,7 @@ where "$ ... $" means all those components which do not depend neither on $\beta
 		\begin{equation} \label{a22}
 			a_{22} = \frac{\partial\dot{\omega}_{z}^{B}}{\partial\omega_{z}} = \frac{1}{J_{z}} \frac{\partial\tau_{z}^{B}}{\partial\omega_{z}}\vert_{\dot\omega_{z}=0} = -\frac{1}{J_{z}}(\sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}} (r_{xf}^{2} + r_{yf}^{2}) + \sum\limits_{i=1}^2 F_{wz_{i}}^{w} \mu(\lambda_{0}) \frac{1}{v_{max}} (r_{xr}^{2} + r_{yr}^{2}))
 		\end{equation}
-	By combining together the previous components, we got the first "draft" of matrix A.
+	By combining together the previous components, we got the first  \textit{draft} of matrix $A$.
 	\begin{comment}
 		\begin{equation}
 			A=
@@ -248,12 +249,13 @@ where "$ ... $" means all those components which do not depend neither on $\beta
 			\end{bmatrix}
 		\end{equation}
 	\end{comment}
-\subsection{Matrix $\mathbf{B_{1}}$ - 1° draft} 
+\subsection{Matrix $\mathbf{B_{1}}$} 
+	Following to the theoretical definition of control matrix, by deriving the state's equations with respect to our control variable, $\delta_{wr}^{B}$, we obtained even the first \textit{draft} of matrix $B_{1}$.
 		\begin{equation} \label{B1}
 			B_{1}=
 			\begin{bmatrix} 
-				\frac{\partial\dot{\beta}_{u}^{B}}{\partial\delta_{r}^{B}} \\
-				\frac{\partial\dot{\omega}_{z}^{B}}{\partial\delta_{r}^{B}}
+				\frac{\partial\dot{\beta}_{u}^{B}}{\partial\delta_{wr}^{B}} \\
+				\frac{\partial\dot{\omega}_{z}^{B}}{\partial\delta_{wr}^{B}}
 			\end{bmatrix} = 
 			\begin{bmatrix}
 				-\frac{1}{mV_{0B}}\{-\sin\beta_{u}\frac{\partial F_{wx}^{B}}{\partial \delta_{wr}} + \cos\beta_{u}\frac{\partial F_{wy}^{B}}{\partial \delta_{wr}}\}  \\
@@ -285,8 +287,8 @@ where "$ ... $" means all those components which do not depend neither on $\beta
 				\frac{\partial F_{wy}^{B}}{\partial \delta_{wf}} &= 2 [\frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} \mu_{S} \sin \delta_{wr} + \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} (\mu_{L}+C_{R}) \cos\delta_{wr} + \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} \mu_{S} \sin \delta_{wf}+ \\ &+ \frac{\partial F_{wz}^{W}}{\partial \delta_{wf}} (\mu_{L}+C_{R})\cos\delta_{wf} - F_{wz}^{W} (\mu_{L}+C_{R}) \sin\delta_{wf}]
 			\end{split}
 		\end{equation}
-\subsection{Matrix $\mathbf{B_{2}}$ - 1° draft}
-	Considering that our \textit{disturbance} variable ($\delta_{wf}$) is always a steering angle as the \textit{control} one ($\delta_{wr}$), the processing phase of Matrix $B_{2}$ was exactly the same as the Matrix $B_{1}$ one. \\ The final result is reported down here:
+\subsection{Matrix $\mathbf{B_{2}}$}
+	Considering that our \textit{disturbance} variable ($\delta_{wf}$) is always a steering angle as the \textit{control} one ($\delta_{wr}$), the processing phase of Matrix $B_{2}$ was exactly the same as the Matrix $B_{1}$ one. \\ The final result, relative to the first \textit{draft}, is reported down here:
 		\begin{equation}
 			B_{2}=
 			\begin{bmatrix}
@@ -308,21 +310,25 @@ where "$ ... $" means all those components which do not depend neither on $\beta
 				0 & 1
 			\end{bmatrix}
 		\end{equation}
-\subsection{Final Matrices: $\mathbf{A}$, $\mathbf{B_{1}}$, $\mathbf{B_{2}}$}
-We start this subsection showing our first ever result we obtained by simulating our vehicle model, described inside the previous subsections, over the pre-defined simulator. 
-%\begin{figure} \label{FR traj}
-%	\centering
-%	\includegraphics[scale=0.5]{../Images/LinSyst/FakeRes_Trj}
-%	\caption{First ever result - Trajectories}
-%\end{figure}
-
-\begin{figure} \label{FR ref}
+	The first \textit{draft} of matrix $C$ and its final version are exactly the same thing.
+\section{Final Linearized System} \label{Final LTI}
+	We start this section showing our first ever result we obtained by simulating our vehicle model, described inside section \ref{1stLinSyst}, over the pre-defined simulator (it will be better explained inside the chapter \ref{label}). 
+	The figures \ref{FR traj} and \ref{FR ref} will represent, respectively, the \textit{trajectory comparison} and the \textit{parameters comparison} between closed and open-loop.
+\begin{figure}[!b]
+	\centering
+	\includegraphics[scale=0.4]{../Images/LinSyst/FakeRes-trj}
+	\caption{First ever result - RS vs OL comparison}
+	\label{FR traj}
+\end{figure}
+\begin{figure}
 	\centering
 	\includegraphics[scale=0.38]{../Images/LinSyst/FakeRes}
-	\caption{First ever result - References}
+	\caption{First ever result - $\omega$, $\beta_{u}$, $\delta_{wr}$ comparison}
+	\label{FR ref}
 \end{figure}
-
-The main problem we noticed was about the differences, in terms of absolute values, between our vehicle model's physical parameters and the pre-defined ones inside the simulator. As a matter of facts, the car included inside the simulator was characterized by different technical parameters, such as weight, center of mass location, moment of inertia and so on. Therefore, our first result was strongly influenced by this technical difference to such an extent that the final vehicle behaviour was not the optimal one.
+	
+	Once we achieved that result, we tried to 
+	The main problem we noticed was about the differences, in terms of absolute values, between our vehicle model's physical parameters and the pre-defined ones inside the simulator. As a matter of facts, the car included inside the simulator was characterized by different technical parameters, such as weight, center of mass location, moment of inertia and so on. Therefore, our first result was strongly influenced by this technical difference to such an extent that the final vehicle behaviour was not the optimal one.
 \begin{figure}[b] \label{VehicleScheme}
 	\centering
 	\includegraphics[scale=0.065]{../Images/LinSyst/SchemaAssi}
