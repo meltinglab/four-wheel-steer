@@ -18,7 +18,7 @@ This step was the most critical one because of its close correlation with the pr
 Starting from the theory, we studied the real meaning of "Cost Function" and its elements. The function's goal is to design a control system, $u$, ables to minimize the function $J$ itself. In a nutshell, if a certain condition is strongly desired, we have to associate to it a low cost, and viceversa. \\
 There follow the linear quadratic form of the cost function $J$ for a general LTI system:
 \begin{equation}
-J = x^{T}(t_{f}) S_{f} x(t_{f})\int_{t_{0}}^{t_{f}} e^{T} Q e + u^{T} R u \ dt
+J = x^{T}(t_{f}) S_{f} x(t_{f}) + \int_{t_{0}}^{t_{f}} e^{T} Q e + u^{T} R u \ dt
 \end{equation}
 where:
 \begin{itemize}
@@ -72,11 +72,11 @@ As we have already written, we saturate the control to a physically feasible ran
 \begin{equation} \label{Resulting Control}
 	\ \delta_{r} = -
 	\begin{bmatrix}
-	\ K_{1}\\
-	\ K_{2}
+	\ K_{1} & K_{2}
 	\end{bmatrix}
 	\begin{bmatrix}
-	\ \beta_{u}-\beta_{u_{ref}} & \omega_{z}-\omega_{z_{ref}}
+	\ \beta_{u}-\beta_{u_{ref}} \\
+	\ \omega_{z}-\omega_{z_{ref}}
 	\end{bmatrix}
 \end{equation}
 Where matrix K is obtained from the lookup table generated at startup, while $\omega_{z_{ref}}$ is the result of a real time computation of equilibrium states, $\beta_{u_{ref}}$ instead is set equal to 0 because we want to have the front of the car most aligned possible with the direction of the velocity vector.
