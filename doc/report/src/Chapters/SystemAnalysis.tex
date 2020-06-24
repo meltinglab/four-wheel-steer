@@ -13,16 +13,16 @@
 	During the design phase of our system model, we chose to directly include an automatic function computing the equation \ref{eq.Eigenvalues}. In particular, inside the Matlab file "LinPlant", we have reserved few lines of code both to perform the algebraic calculation and to display the final result directly to the user. Looking at the figure \ref{stability}, it is possible to see how we have implemented such a function.\\ With the aim of informing the user about the correctness of the algebraic computation, we display the sentence highlighted in purple. Once the real part of all the eigenvalues of a matrix is strictly negative, the matrix itself is declared "Hurwitz".
 	\begin{figure}
 		\centering
-		\lstinputlisting[caption={[Eigenvalues]}, firstline=83, lastline=88, firstnumber=83]{../../../model/LinPlant.m}
+		\lstinputlisting[caption={[Eigenvalues]}, firstline=75, lastline=80, firstnumber=75]{../../../model/LinPlant.m}
 		\caption{Lin Plant - Stability}
 		\label{stability}
-	\end{figure}    
+	\end{figure}
 	\section{System Reachability}
 	The procedure we adopted to prove the state space reachability has been almost the same one with respect to the previous section, \ref{S}. Like before, we inform the user, about process correctness, by means of a sentence highlighted in purple. As it is clearly visible from the image \ref{reachability}, the function firstly computes the rank of the matrix \textit{Reachable}, as it is present also in equation \ref{Reachability Matrix}, then it checks if it is equal or not than two, that is the dimension of our state space. We would like to point out that, the composition of matrix \textit{Reachable}, has been done by following the state space theory we dealt with in class. Therefore, the columns of such a matrix represent all the physical directions along which the control can actually work. \\
 	Making readable those kind of information can be really useful, for the user, in order to better understand what the control system is actually doing.
 	\begin{figure}
 		\centering
-		\lstinputlisting[caption={[Reachability]}, firstline=94, lastline=98, firstnumber=94]{../../../model/LinPlant.m}
+		\lstinputlisting[caption={[Reachability]}, firstline=86, lastline=90, firstnumber=86]{../../../model/LinPlant.m}
 		\caption{Lin Plant - State Space Reachability}
 		\label{reachability}
 	\end{figure}
@@ -30,7 +30,7 @@
 	\ R =
 	\begin{bmatrix}
 	\ B_{1} & AB_{1}
-	\end{bmatrix} 
+	\end{bmatrix}
 	\end{equation}
 	\section{Equilibrium Points}
 	After checking the system stability and the state space reachability, we proceeded with the purpose of getting the equilibrium points of both $\beta_{u}$ and $\omega_{z}$. Since we are linearizing around a straight trajectory, we have imposed the following condition to our LTI system:
@@ -46,7 +46,7 @@
 	\begin{bmatrix}
 	\tilde{\beta_{u}} \\
 	\tilde{\omega_{z}}
-	\end{bmatrix} 
+	\end{bmatrix}
 	 + B_{2}[\tilde{\delta_{wf}}]
 	\end{equation}
 	As a matter of facts, the $B_{1}$ contribution can be neglected because, around a straight trajectory, our control variable $\delta_{wr}$ is equal to zero. The equation \ref{Equilibrium condition} is directly given by the "equilibrium point" definition: \textit{to be considered an equilibrium poit, the current parameter must have a zero time derivative}. Therefore, if the matrix A is invertible, we can write the following statement:
@@ -54,7 +54,7 @@
 	\begin{bmatrix}
 	\tilde{\beta_{uEQ}} \\
 	\tilde{\omega_{zEQ}}
-	\end{bmatrix} = 
+	\end{bmatrix} =
 	A^{-1}[- B_{2} \tilde\delta_{wf}]
 	\end{equation}
 	From the equation \ref{eq points} we got our equilibrium points, $\beta_{uEQ}$ and $\omega_{zEQ}$. These equilibrium points are different from the linearization points that we computed at the beginning, while we were defining the linearized system. Given that our objective is to obtain a stable system, we then applied trajectory tracking to keep the system around these states.\\

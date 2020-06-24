@@ -8,7 +8,7 @@ Inside this chapter, we are going to show the control system we designed for our
 At first we brought our devised system into Matlab, initializing all these variables able to influence its behaviour, so that the control system could act over a vehicle model that was similar to the one used by the simulator. Then, we built the handles to connect them with the simulator in order to achieve a simulation environment inside which we could test our control system in comparison with an open loop simulation. Moreover, we merged the simulator and the control law together in Simulink and we started optimizing the system. Finally, after some considerations, we have implemented also the disturbance compensation since, in our case, we knew its value a priori. In this way, we could reach an optimal control system acting on the \textit{state} variables by considering also the influence given by the human driver, $\delta_{wf}$.\\
 \begin{figure}
 		\centering
-		\lstinputlisting[caption={[SimDataImport]}, firstline=36, lastline=40, firstnumber=36]{../../../model/LinPlant.m}
+		\lstinputlisting[caption={[SimDataImport]}, firstline=28, lastline=32, firstnumber=28]{../../../model/LinPlant.m}
 		\caption{Import vehicle data from the simulator}
 		\label{stability}
 	\end{figure}
@@ -58,7 +58,7 @@ This reason led us towards the consideration of extracting not one matrix for K,
 \begin{itemize}
 	\item front steering angle: $\delta_{wf}$;
 	\item current vehicle speed: $V_0$.
-\end{itemize}	
+\end{itemize}
 This extraction is not done in real time, due to the relatively high computational load of performing an LQR algorithm. It, instead, is done only once at the startup of the system (now that we are in prototypation phase, later on it will only be performed once and for all). After this initial computations made at some discrete linearization points, the results will be stored in lookup tables and, at run-time, the only workload for the microcontroller will be to take as input the actual state of the machine (specifically the two input parameters written in the bullet list here above) and perform matrix multiplication as usual.\\
 Obviously, given the discrete nature of the lookup table, it will not be possible to have a perfect match for the actual disturbances of the vehicle that span across a continuous space, so we will have to approximate to the nearest point of linearization. It will be anyway a better approximated solution with respect to a system with a single linearization point and a single K.\\
 Another reason why we have devoted one script for the extraction of K matrices and another one for the computation of realtime control is that you can't generate C code using matlab coder or even a simulink block with Matlab code containing the lqr algorhytm present in the control system toolbox. We needed to keep it separate.\\
@@ -67,7 +67,7 @@ Anyway due to the continuous variation of the equilibrium states, we dont'have b
 \includegraphics[width=\linewidth]{../Images/KLut.jpg}\caption{Excerpt of K Lookup Table}
 \end{figure}
 \section{H multiplier} \label{H section}
-As we introduced at the beginning of current chapter, we have implemented also the disturbance compensation, due to $\delta_{wf}$, inside our control law. In particular, since we would like to reach a stable vehicle characterized by a constant $\omega_{z}$ (so that it is as similar as possible to $\omega_{z_{ref}}$), we focused our attention mainly on this \textit{state}. Therefore, this choice led us to compensate the disturbance effect mostly for $\omega_{z}$ \textit{state}. As well, even after this choice, we noticed that, also the $\beta_{u}$, has been correctly compensated. 
+As we introduced at the beginning of current chapter, we have implemented also the disturbance compensation, due to $\delta_{wf}$, inside our control law. In particular, since we would like to reach a stable vehicle characterized by a constant $\omega_{z}$ (so that it is as similar as possible to $\omega_{z_{ref}}$), we focused our attention mainly on this \textit{state}. Therefore, this choice led us to compensate the disturbance effect mostly for $\omega_{z}$ \textit{state}. As well, even after this choice, we noticed that, also the $\beta_{u}$, has been correctly compensated.
 
 Up to now, by means of the LQR optimal control system application, once the real working conditions differ from the equilibrium points we found, we can correct the vehicle behaviour. However, such a system always feels the presence of the external disturbance, $\delta_{wf}$. In order to make "disturbance-immune" (from $\delta_{wf}$ point of view, only) our controller, we computed the needed parameter to be added to our final control law. That parameter, \ref{HEquat}, has the purpose of considering the disturbance effect and compensating for it.
 The following equations will better clarify this concept.
@@ -89,7 +89,7 @@ Focusing our attention to H parameter, we reached the following final equation:
  (B_{1} H + B_{2})\tilde{d} = 0
 \end{equation}
 As we previously said, if we consider the disturbance compensation mainly for the $\omega_{z}$ \textit{state}, we finally obtain:
-\begin{equation} 
+\begin{equation}
 \label{HEquat}
 H = -\frac{b_{{2}_{21}}}{b_{{1}_{21}}}
 \end{equation}
@@ -105,7 +105,7 @@ As we have already written before, we saturate the control signal to a physicall
 	\begin{bmatrix}
 	\ \beta_{u}-\beta_{u_{ref}} \\
 	\ \omega_{z}-\omega_{z_{ref}}
-	\end{bmatrix} + 
+	\end{bmatrix} +
 	H \delta_{wf}
 \end{equation}
 Where:
