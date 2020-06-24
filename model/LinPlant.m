@@ -1,18 +1,10 @@
 function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
 
-    %global m rho S g rxf rxr ryf rx ry rz r Iz
-    %global Cx0 Cyb CR rk
-    %global delta
-    %global xeq
-
-    deg2rad = pi/180;   % Degrees to Radians Coeff.
-    rad2deg = 180/pi;   % Radians to Degrees Coeff.
-
     % Initial conditions
     psi0 = vehicle.InitialYawAngle;
     x0 = vehicle.InitialLongPosition;
     y0 = vehicle.InitialLatPosition;
-    deltaF = deg2rad * deltaF;
+    deltaF = deg2rad(deltaF);
 %   deltaR = 0.1;
     deltaR = 0.0;
     betaU0 = 0;
@@ -125,7 +117,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
 
     % Ideal turn Yaw Rate
     omegaZack = (V0/(rxf-rxr))*tan(deltaF);
-    xeq(2,1) = omegaZack;
+    %xeq(2,1) = omegaZack;
 
     Q = (1/2)*inv([0.005 0; 0 0.02]);       % MAX 1/||x||
     R = inv([0.05]);                  % MAX 1/||u||
@@ -136,7 +128,4 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
 
     [Klqr, s, e] = lqr(sys, Q, R, 0);
     Klqr = Klqr';
-    %res = [Klqr xeq];
-    %deltaR = - Klqr*[betaU - xeq(1,1); omegaZ - xeq(1,2); deltaf - xeq(1,3)];
-    %ESEMPIO = rad2deg*(-Klqr * [0.1047 - xeq(1,1); 0.15 - xeq(1,2); deltaf - xeq(1,3)])
 end
