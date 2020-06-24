@@ -69,27 +69,28 @@ Anyway due to the continuous variation of the equilibrium states, we dont'have b
 \section{H multiplier} \label{H section}
 As we introduced at the beginning of current chapter, we have implemented also the disturbance compensation, due to $\delta_{wf}$, inside our control law. In particular, since we would like to reach a stable vehicle characterized by a constant $\omega_{z}$ (so that it is as similar as possible to $\omega_{z_{ref}}$), we focused our attention mainly on this \textit{state}. Therefore, this choice led us to compensate the disturbance effect mostly for $\omega_{z}$ \textit{state}. As well, even after this choice, we noticed that, also the $\beta_{u}$, has been correctly compensated. 
 
-Up to now, by means of the LQR optimal control system application, once the real working conditions differ from the equilibrium points we found, we can correct the vehicle behaviour. However, such a system always feels the presence of the external disturbance, $\delta_{wf}$. In order to make "disturbance-immune" (from $\delta_{wf}$ point of view, only) our controller, we computed the needed parameter to be added to our final control law. That parameter, \ref, has the purpose of considering the disturbance effect and compensating for it.
+Up to now, by means of the LQR optimal control system application, once the real working conditions differ from the equilibrium points we found, we can correct the vehicle behaviour. However, such a system always feels the presence of the external disturbance, $\delta_{wf}$. In order to make "disturbance-immune" (from $\delta_{wf}$ point of view, only) our controller, we computed the needed parameter to be added to our final control law. That parameter, \ref{HEquat}, has the purpose of considering the disturbance effect and compensating for it.
 The following equations will better clarify this concept.
 
-In order to correctly compute the H equation, we started from the general equation:
+In order to correctly compute the H equation, we started from the following general equation:
 \begin{equation} \label{StartEq}
 	\dot{\tilde{x}} = A \tilde{x} + B_{1}\tilde{\delta_{wr}} + B_{2}\tilde{\delta_{wf}} = 0
 \end{equation}
-Then,we imposed the following equation as our "new" control law:
+Then, we imposed the next equation as our "new" control law taking into account also the presence of disturbance:
 \begin{equation} \label{new u}
 	u = - K \tilde{x} + H \tilde{d}
 \end{equation}
-By including the equation \ref{new u} inside the \ref{StartEq}, we obtained:
+By including the equation \ref{new u} inside the \ref{StartEq} one, we obtained:
 \begin{equation}
 	\dot{\tilde{x}} = A \tilde{x} + B_{1}(- K \tilde{x} + H \tilde{d}) + B_{2}\tilde{\delta_{wf}} = 0
 \end{equation}
-Focusing our attention to obtain the equation for H parameter, we reached the following equation:
+Focusing our attention to H parameter, we reached the following final equation:
 \begin{equation}
  (B_{1} H + B_{2})\tilde{d} = 0
 \end{equation}
 As we previously said, if we consider the disturbance compensation mainly for the $\omega_{z}$ \textit{state}, we finally obtain:
-\begin{equation}
+\begin{equation} 
+\label{HEquat}
 H = -\frac{b_{{2}_{21}}}{b_{{1}_{21}}}
 \end{equation}
 \section{Saturation of control and states}
