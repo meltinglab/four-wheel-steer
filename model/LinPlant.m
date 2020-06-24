@@ -127,7 +127,7 @@ function [Klqr, xeq] = LinPlant(deltaF, V0, vehicle)
     omegaZack = (V0/(rxf-rxr))*tan(deltaF);
     xeq(2,1) = omegaZack;
 
-    Q = inv([0.005 0; 0 0.02]);       % MAX 1/||x||
+    Q = (1/2)*inv([0.005 0; 0 0.02]);       % MAX 1/||x||
     R = inv([0.05]);                  % MAX 1/||u||
 
     sys = ss(A, B1, C, D);
