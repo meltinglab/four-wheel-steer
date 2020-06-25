@@ -48,25 +48,29 @@ assignin('base','Eqlut',Eqlut);
 % Constant Radius
 switch condition
     case "ConstRadiusSnow"
-        assignin('base','RefMode',0);
-        assignin('base','FrictionMode',1)
-        assignin('base','WindMode',0)
+        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','const');
+        set_param([block '/Environment/Friction'],'OverrideUsingVariant','snow');
+        set_param([block '/Environment/Wind'],'OverrideUsingVariant','nowind');
     case "ConstRadiusWind"
-        assignin('base','RefMode',0);
-        assignin('base','FrictionMode',0)
-        assignin('base','WindMode',2)
+        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','const');
+        set_param([block '/Environment/Friction'],'OverrideUsingVariant','perfect');
+        set_param([block '/Environment/Wind'],'OverrideUsingVariant','wind');
     case "LaneChange"
-        assignin('base','RefMode',2);
-        assignin('base','FrictionMode',0)
-        assignin('base','WindMode',0)
+        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','lanechange');
+        set_param([block '/Environment/Friction'],'OverrideUsingVariant','perfect');
+        set_param([block '/Environment/Wind'],'OverrideUsingVariant','nowind');
     case "LaneChangeIce"
-        assignin('base','RefMode',2);
-        assignin('base','FrictionMode',2)
-        assignin('base','WindMode',0)
+        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','lanechange');
+        set_param([block '/Environment/Friction'],'OverrideUsingVariant','ice');
+        set_param([block '/Environment/Wind'],'OverrideUsingVariant','nowind');
+    case "Doomsday"
+        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','lanechange');
+        set_param([block '/Environment/Friction'],'OverrideUsingVariant','ice');
+        set_param([block '/Environment/Wind'],'OverrideUsingVariant','burst');
     otherwise
-        assignin('base','RefMode',0);
-        assignin('base','FrictionMode',0)
-        assignin('base','WindMode',0)
+        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','const');
+        set_param([block '/Environment/Friction'],'OverrideUsingVariant','perfect');
+        set_param([block '/Environment/Wind'],'OverrideUsingVariant','nowind');
 end
         
 % Simulate plain vehicle
@@ -77,10 +81,11 @@ set_param(switchBlock{1},'Value','0');
 set_param(switchBlock{1},'Value','1');
 [deltaRRS,omegaZRS,omegaZREF,betaURS,betaREF,posXRS,posYRS,tRS] = RunSimulation(1);
 
+% Rear steering saturation limits overlay
 deltaRMax = zeros(1,size(tRS,1));
 for i = 1 : size(tRS,1)
     deltaRMax(1,i) = rngRearSteer;
-end    
+end
 
 switch condition
     case "ConstRadiusSnow"
