@@ -45,32 +45,34 @@ VEH = getVariable(get_param(bdroot('CRReferenceApplication'), 'modelworkspace'),
 assignin('base','Klut',Klut);
 assignin('base','Eqlut',Eqlut);
 
+simroot = bdroot('CRReferenceApplication')
+
 % Constant Radius
 switch condition
     case "ConstRadiusSnow"
-        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','const');
-        set_param([block '/Environment/Friction'],'OverrideUsingVariant','snow');
-        set_param([block '/Environment/Wind'],'OverrideUsingVariant','nowind');
+        set_param([simroot '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver/Maneuver Pattern'],'OverrideUsingVariant','const');
+        set_param([simroot '/Environment/Friction'],'OverrideUsingVariant','snow');
+        set_param([simroot '/Environment/Wind'],'OverrideUsingVariant','nowind');
     case "ConstRadiusWind"
-        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','const');
-        set_param([block '/Environment/Friction'],'OverrideUsingVariant','perfect');
-        set_param([block '/Environment/Wind'],'OverrideUsingVariant','wind');
+        set_param([simroot '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver/Maneuver Pattern'],'OverrideUsingVariant','const');
+        set_param([simroot '/Environment/Friction'],'OverrideUsingVariant','perfect');
+        set_param([simroot '/Environment/Wind'],'OverrideUsingVariant','wind');
     case "LaneChange"
-        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','lanechange');
-        set_param([block '/Environment/Friction'],'OverrideUsingVariant','perfect');
-        set_param([block '/Environment/Wind'],'OverrideUsingVariant','nowind');
+        set_param([simroot '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver/Maneuver Pattern'],'OverrideUsingVariant','lanechange');
+        set_param([simroot '/Environment/Friction'],'OverrideUsingVariant','perfect');
+        set_param([simroot '/Environment/Wind'],'OverrideUsingVariant','nowind');
     case "LaneChangeIce"
-        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','lanechange');
-        set_param([block '/Environment/Friction'],'OverrideUsingVariant','ice');
-        set_param([block '/Environment/Wind'],'OverrideUsingVariant','nowind');
+        set_param([simroot '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver/Maneuver Pattern'],'OverrideUsingVariant','lanechange');
+        set_param([simroot '/Environment/Friction'],'OverrideUsingVariant','ice');
+        set_param([simroot '/Environment/Wind'],'OverrideUsingVariant','nowind');
     case "Doomsday"
-        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','lanechange');
-        set_param([block '/Environment/Friction'],'OverrideUsingVariant','ice');
-        set_param([block '/Environment/Wind'],'OverrideUsingVariant','burst');
+        set_param([simroot '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver/Maneuver Pattern'],'OverrideUsingVariant','lanechange');
+        set_param([simroot '/Environment/Friction'],'OverrideUsingVariant','ice');
+        set_param([simroot '/Environment/Wind'],'OverrideUsingVariant','burst');
     otherwise
-        set_param([block '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver (CustomManeuver)'],'OverrideUsingVariant','const');
-        set_param([block '/Environment/Friction'],'OverrideUsingVariant','perfect');
-        set_param([block '/Environment/Wind'],'OverrideUsingVariant','nowind');
+        set_param([simroot '/Reference Generator/Reference Generator/Custom Maneuver/Custom Maneuver/Maneuver Pattern'],'OverrideUsingVariant','const');
+        set_param([simroot '/Environment/Friction'],'OverrideUsingVariant','perfect');
+        set_param([simroot '/Environment/Wind'],'OverrideUsingVariant','nowind');
 end
         
 % Simulate plain vehicle
