@@ -13,7 +13,7 @@
 	During the design phase of our system model, we chose to directly include an automatic function computing the equation \ref{eq.Eigenvalues}. In particular, inside the Matlab file "LinPlant", we have reserved few lines of code both to perform the algebraic calculation and to display the final result directly to the user. Looking at the figure \ref{stability}, it is possible to see how we have implemented such a function.\\ With the aim of informing the user about the correctness of the algebraic computation, we display the sentence highlighted in purple. Once the real part of all the eigenvalues of a matrix is strictly negative, the matrix itself is declared "Hurwitz".
 	\begin{figure}
 		\centering
-		\lstinputlisting[caption={[Eigenvalues]}, firstline=75, lastline=80, firstnumber=75]{../../../model/LinPlant.m}
+		\lstinputlisting[caption={[Eigenvalues]}, firstline=90, lastline=95, firstnumber=80]{../../../model/LinPlant.m}
 		\caption{Lin Plant - Stability}
 		\label{stability}
 	\end{figure}
@@ -22,7 +22,7 @@
 	Making readable those kind of information can be really useful, for the user, in order to better understand what the control system is actually doing.
 	\begin{figure}
 		\centering
-		\lstinputlisting[caption={[Reachability]}, firstline=86, lastline=90, firstnumber=86]{../../../model/LinPlant.m}
+		\lstinputlisting[caption={[Reachability]}, firstline=101, lastline=105, firstnumber=101]{../../../model/LinPlant.m}
 		\caption{Lin Plant - State Space Reachability}
 		\label{reachability}
 	\end{figure}

@@ -53,7 +53,7 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		\subsection{Controllers}
 
 		In the \emph{Controller} block are housed all the typical electronic control units found on modern cars. The most typical one is the \emph{Anti-lock Braking System},
-		but there are also the differential control and others. 
+		but there are also the differential control and others.
 		\begin{center}
 			\includegraphics[width=0.9\textwidth]{Images/Simulator/ctrl-full}
 		\end{center}
@@ -68,7 +68,7 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		The available variants include a \emph{Predictive Driver} that follows a path by acting on both the speed commands and the steering wheel,
 		a \emph{Longitudinal Driver} for speed profiles only and an \emph{Open-Loop Driver} which basically passes on external, raw commands to the vehicle
 		while maintaining consistency with the signal interface.
-		
+
 		This is somehow the most enigmatic of the blocks, mostly in lateral driving situations. Our understanding is that the Predictiove Driver was designed only for
 		lateral displacement driving actions like in lane change maneuvers. However, the \emph{Constant Radius} reference application features an active curved-trajectory
 		scenario where the Predictive Driver is employed through a mangling of the feedback signals from the vehicle, tricking the driver into a sort of constant lane change. As
@@ -109,7 +109,7 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 
 
 	\section{Integration}
-	
+
 	The framework described so far makes for a very flexible environment, yet it hardly satisfies our requirements out of the box.
 	Yet, we wanted to preserve as much of the original functions as possible, with targeted inclusions rather than outright changes, sticking to the original structure and layout.
 %	To blend seamlessly in such a sophisticated system, we performed some important changes in key components following the logical partitioning as much as possible.
@@ -119,7 +119,7 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 
 
 		\subsection{Rear Steering}
-		
+
 		First and foremost, we needed a rear-steered car. Since an active rear-steering control is still uncommon, the original simulator had no variant for that and required some
 		\mwSL{} plumbing. Nonetheless, the Passenger Vehicle~\ref{ssec:vs-env-passveh} subsystem follows a redundant but consistent structure and provides a signal bus
 		for all four wheel angles, among others. This helped a lot, since we just had to arrange a dedicated \emph{Kinematic Steering} for the rear wheels inside the
@@ -162,13 +162,13 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		The inner workings of this selection process are made available at the \lstinline{info} port and features two sets of seven values for the true value, the quantized one,
 		the would-be index and the upper and lower values for both the division boundaries and the thresholds.
 		\lstinputlisting[firstline=43, lastline=43, firstnumber=43]{Images/Simulator/a4ws-code.m}
-		
+
 		The settings for these threshold, expressed in percentage over one division of the full range, can be found at the very beginning of \texttt{model/SimRoutine.m}:
-		\lstinputlisting[firstline=9, lastline=15, firstnumber=9]{../../../model/SimRoutine.m}
-		
+		\lstinputlisting[firstline=24, lastline=30, firstnumber=24]{../../../model/SimRoutine.m}
+
 		The second step is to extract the instantaneous equilibrium point by inverting on-the-fly the matrix $A$, to adapt the reference signals to external conditions as well:
 		\lstinputlisting[firstline=46, lastline=86, firstnumber=46]{Images/Simulator/a4ws-code.m}
-		
+
 		Once the controller have all the ingredients ready, the usual operation $u = -Kx$ is performed and returned at the output:
 		\lstinputlisting[firstline=90, firstnumber=90]{Images/Simulator/a4ws-code.m}
 
@@ -179,7 +179,7 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		Unfortunately, the provided scenarios where difficult to use out-of-the-box, so instead of radically changing them we decided to add our custom maneuver.
 		It might seem a straightforward approach, yet there are a fair amount of cross-scripts to take care of to make the new scenario fit in the simulator.
 		By examining the \emph{mask layout} of the Reference Generator block, we were able to track all the script involved and mirror the required actions on our case.
-		
+
 		Most notably, we choose to set the Driver to a Longitudinal one and provide direct signals for the steering wheel. The initial hype for the Predictive Driver faded as
 		we experienced more and more instability during early simulations. The algorithm implemented in such advanced driver model was hard to interpret and fix, so we traded
 		off some realism for quicker results. Moreover, the block is intended for lateral references along a straight path, like lane-change maneuvers on a highway.
@@ -199,7 +199,7 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 			\item[Evasive] Similar to the lane-change maneuver, but reverts to the original lane much quicker, similarly to an obstacle avoidance action.
 
 		\end{description}
-		
+
 		Each maneuver is initiated at time \SI{20}{\second} and both the \emph{speed} and \emph{steering wheel angle} are set in the Reference Generator settings dialog.
 		The time delay is to let the speed build up before system excitation. For the more articulated maneuvers, the steering profile is obtained by a chain of step generators
 		compensating each other at different time steps. It's a crude yet effective way to lay a pattern and despite the unrealistic step variation of the steering, this ensures that
@@ -228,7 +228,7 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 			\item[Snowy Range] The road switches from tarmac to snow for the rest of the time.
 
 		\end{description}
-		
+
 		Again, these disturbances kick in few seconds after the maneuver is initiated, to let the vehicle build up some spin and make the effect more dramatic.
 		As usual, model variants lets the two phenomena combine together at will.
 		\begin{figure}
@@ -246,15 +246,15 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 	The last, crucial component that completes our project is a set of scripts that perform calculus and drive the simulator to obtain the resulting data.
 	The entry point for the whole simulation is \texttt{model/SimScript.m}, which first extracts vehicle parameters from the model workspace and sets some constants for the size and
 	the resolution of the control look-up tables (as seen in \ref{ssec:vs-int-ctrl}):
-	\lstinputlisting[firstline=7, lastline=19, firstnumber=7]{../../../model/SimRoutine.m}
+	\lstinputlisting[firstline=22, lastline=34, firstnumber=22]{../../../model/SimRoutine.m}
 	Then, it hands all the parameters to the optimization engine:
-	\lstinputlisting[firstline=21, lastline=22, firstnumber=21]{../../../model/SimRoutine.m}
+	\lstinputlisting[firstline=36, lastline=37, firstnumber=36]{../../../model/SimRoutine.m}
 	Finally, the simulation sequence is launched:
-	\lstinputlisting[firstline=25, lastline=29, firstnumber=25]{../../../model/SimRoutine.m}
+	\lstinputlisting[firstline=40, lastline=44, firstnumber=40]{../../../model/SimRoutine.m}
 	The rest of the code formats the output data and plots the results. Its expansion \texttt{model/SimRoutine2.m} automates the simulation for different environmental conditions.
-	
+
 	The optimization engine takes an intermediate step inside \texttt{model/LUTScript.m}, which populates the look-up table used by the controller with the gain coefficients.
 	These are obtained from subsequent invocations of \texttt{model/LinPlant.m}:
-	\lstinputlisting[firstline=1, firstnumber=1]{../../../model/LUTScript.m}
+	\lstinputlisting[firstline=16, firstnumber=16]{../../../model/LUTScript.m}
 	Here the vehicle body dynamics are linearized around the provided point and control law
 	parameters are calculated through \emph{Optimal Control} methods, namely the \lstinline{lqr} \mwML{} function.

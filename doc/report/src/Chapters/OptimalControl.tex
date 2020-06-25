@@ -8,7 +8,7 @@ Inside this chapter, we are going to show the control system we designed for our
 At first we brought our devised system into Matlab, initializing all these variables able to influence its behaviour, so that the control system could act over a vehicle model that was similar to the one used by the simulator. Then, we built the handles to connect them with the simulator in order to achieve a simulation environment inside which we could test our control system in comparison with an open loop simulation. Moreover, we merged the simulator and the control law together in Simulink and we started optimizing the system. Finally, after some considerations, we have implemented also the disturbance compensation since, in our case, we knew its value a priori. In this way, we could reach an optimal control system acting on the \textit{state} variables by considering also the influence given by the human driver, $\delta_{wf}$.\\
 \begin{figure}
 		\centering
-		\lstinputlisting[caption={[SimDataImport]}, firstline=28, lastline=32, firstnumber=28]{../../../model/LinPlant.m}
+		\lstinputlisting[caption={[SimDataImport]}, firstline=43, lastline=47, firstnumber=43]{../../../model/LinPlant.m}
 		\caption{Import vehicle data from the simulator}
 		\label{stability}
 	\end{figure}
