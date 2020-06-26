@@ -4,9 +4,7 @@
 % !TEX root = ../Report.tex
 
 \chapter{System Compliance Analysis}
-
-
-
+Within the current chapter there will follows a system analysis from the . We will describe how we managed the automatic code generation tools provided by both Matlab and Simulink, in order to automatically get a final report containing all the needed documentation. Then, we are going to explain also the coding standard we dealt with (Misra C) in order to make our code rules-compliant.
 \subsection{Code Generation}
 Inside this section, we are going to explain how we have generated the code for our control system. In particular we decided to generate only the source C code, because we didn't have in mind a specific architecture on which to implement our system, we leave the compilation to a future in which we have a target hardware. We decided to generate the code only for our control system and not for the entire Matlab project, because in we won't need to implement on a microcontroller the whole simulator, just the control system. 
 \begin{figure} \label{Control Mask}
@@ -37,24 +35,19 @@ You will anyway be able to generate the report automatically using Simulink Code
 		\includegraphics[width=0.7\textwidth]{Images/Simulator/codegen-snippet}
 		\caption{Example of code obtained through automatic generation}	
 \end{figure}
-As you can see in figure \ref{Codegen Snippet} the automatically generated code is usually less readable than human written one, but it is logically correct and simplifies a lot the original block scheme, Simulink Coder is intelligent enough to eliminate or collapse together unnecessary or repeated blocks, thus creating a shorter and more on-point code.\\\\\\
-\\
-\\
-\\
-\\
-\\
-\\
+As you can see in figure \ref{Codegen Snippet} the automatically generated code is usually less readable than human written one, but it is logically correct and simplifies a lot the original block scheme, Simulink Coder is intelligent enough to eliminate or collapse together unnecessary or repeated blocks, thus creating a shorter and more on-point code.
+\newpage
 \subsection{MISRA C Analysys}
 
 MISRA C is a set of software development guidelines for the C programming language developed by MISRA (Motor Industry Software Reliability Association). Its aims are to facilitate code safety, security, portability and reliability in the context of embedded systems, specifically those systems programmed in ISO C / C90 / C99.
 
 Each Guideline is classified as  Mandatory (new for MISRA C:2012),Required or Advisory. Furthermore, the MISRA Compliance document permits Advisory guidelines to be Disapplied. Mandatory guidelines shall always be complied with Required guidelines shall be complied with, unless subject to a Deviation Advisory guidelines are considered good practice, but compliance is less formal.
-In order for a piece of software to claim to be compliant to the MISRA C Guidelines, all mandatory rules shall be met and all required rules and directives shall either be met or subject to a formal deviation. Advisory rules may be disapplied without a formal deviation.To apply modeling guidelines across projects and development teams, we used the Matlab Model Advisor to run checks on our model. When check runs, the Model Advisor reviews the model for conditions and configuration settings specified by the check. Moreover,we implement consistent modeling guidelines across our projects and development teams.In particular about our controller we make all the check of Modeling Standards for MiSRA C code generation. In brief this standard take into account the evironment of the code, the lenguage extensions regarding the assembler, Character sets, Identifier, Type and Constants. 
-This tool allow to run checks for the overall system, but we fixed our compliance target only about the test for the controller , for this reason we choice to make only the relevant tests that are usefull for our scope, these are showed in bottom figure. We obtained MisraC compliance for the overall test performed.  
+In order for a piece of software to claim to be compliant to the MISRA C Guidelines, all mandatory rules shall be met and all required rules and directives shall either be met or subject to a formal deviation. Advisory rules may be disapplied without a formal deviation. To apply modeling guidelines across projects and development teams, we used the Matlab Model Advisor to run checks on our model. When check runs, the Model Advisor reviews the model for conditions and configuration settings specified by the check. Moreover,we implement consistent modeling guidelines across our projects and development teams.In particular about our controller we make all the check of Modeling Standards for MiSRA C code generation. In brief this standard take into account the environment of the code, the language extensions regarding the assembler, Character sets, Identifier, Type and Constants. 
+This tool allow to run checks for the overall system, but we fixed our compliance target only about the test for the controller , for this reason we choice to make only the relevant tests that are usefull for our scope, these are showed in bottom figure. We obtained Misra C compliance for the overall test performed.  
 \\
 \begin{figure}[hpt]
 	\centering
 	\includegraphics[width=1\textwidth]{../Images/VCS/Misra.png}
 	\caption{MisraC:2012 compliance test}
-	\label{gitattributes}
+	\label{misra}
 \end{figure}   
