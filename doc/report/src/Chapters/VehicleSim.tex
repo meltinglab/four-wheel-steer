@@ -52,11 +52,14 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 
 		\subsection{Controllers}
 
-		In the \emph{Controller} block are housed all the typical electronic control units found on modern cars. The most typical one is the \emph{Anti-lock Braking System},
-		but there are also the differential control and others.
-		\begin{center}
+		In the \emph{Controller} block are housed all the typical electronic control units found on modern cars. As of \vref{fig:ctrl-full}, the most typical one is the
+		\emph{Anti-lock Braking System}, but there is also the differential control and others.
+		\begin{figure}[hbt]
+			\centering
 			\includegraphics[width=0.9\textwidth]{Images/Simulator/ctrl-full}
-		\end{center}
+			\caption{Full view of the \lstinline{Controller} subsystem}
+			\label{fig:ctrl-full}
+		\end{figure}
 
 		Even though physically separated from the rest of the vehicle model, it is tightly coupled with that one, as it would be in the real world. As said before, any of these ECUs
 		can be enabled through the corresponding variants.
@@ -77,22 +80,26 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 
 		\subsection{Reference Generator}
 
-		Here is where the director leads the orchestra. Despite the humble name, the \emph{Reference Generator} does much more than simply provide the reference path
-		to the driver. It actually offers the main settings panel for selecting the type of maneuver, the 3D scenario and the simulated vehicle model, the cruise speed and specific
-		maneuver parameters. In the background, each callback to the scripts changes accordingly the remaining blocks of the simulator to meet the requests.
-		\begin{center}
+		Here is where the director leads the orchestra. Despite the humble name, the \emph{Reference Generator} \ref{fig:refgen-cfg} does much more than simply provide the
+		reference path to the driver.
+		It actually offers the main settings panel for selecting the type of maneuver, the 3D scenario and the simulated vehicle model, the cruise speed and specific maneuver
+		parameters. In the background, each callback to the scripts changes accordingly the remaining blocks of the simulator to meet the requests.
+		\begin{figure}
+			\centering
 			\includegraphics[height=0.3\textheight]{Images/Simulator/sim-refgen-cfg}
-		\end{center}
+			\caption{\lstinline{Reference Generator} settings panel}
+			\label{fig:refgen-cfg}
+		\end{figure}
 
 
 		\subsection{Visualizer}
 
 		The last component of the simulator is the \emph{Visualizer}, the most user-friendly of them all. Apart from collecting each and every useful signal from the whole system,
-		the Visualizer offers a real-time dashboard showing the state of the car.
-		\begin{figure}
+		the Visualizer offers a real-time dashboard \ref{fig:vis-dash} showing the state of the car.
+		\begin{figure}[htb]
 			\centering
-			\subfloat[][]{\includegraphics[height=0.12\textheight]{Images/Simulator/vis-dash-drv}}\quad
-			\subfloat[][]{\includegraphics[height=0.12\textheight]{Images/Simulator/vis-dash-veh}}
+			\subfloat[][Driver commands]{\includegraphics[height=0.12\textheight]{Images/Simulator/vis-dash-drv}}\quad
+			\subfloat[][Car data]{\includegraphics[height=0.12\textheight]{Images/Simulator/vis-dash-veh}}
 			\caption{Detail of the real-time dashboard}
 			\label{fig:vis-dash}
 		\end{figure}
@@ -125,12 +132,12 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		for all four wheel angles, among others. This helped a lot, since we just had to arrange a dedicated \emph{Kinematic Steering} for the rear wheels inside the
 		\emph{Driveline}, replace the grounded wheel signal with its output and finally route the input up to our control unit (see below), following all translation stages and bus
 		aggregations.
-		\begin{figure}
+		\begin{figure}[hbtp]
 			\centering
 			\subfloat[][Rear Steering signal routing]{\includegraphics[width=0.45\textwidth]{Images/Simulator/veh-drvln-steer}}\quad
 			\subfloat[][Body model adaptation]{\includegraphics[width=0.45\textwidth]{Images/Simulator/veh-body-detail}}
-			\caption{}
-			\label{}
+			\caption{Key elements of the steering chain}
+			\label{fig:passveh-steer}
 		\end{figure}
 
 		The Kinematic Steering for the rear wheels is set to a ratio of 1:1 for direct wheel control, while saturating the maximum steering range according to the
@@ -150,9 +157,12 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 		Inside \texttt{model/Controller.slx} the actual control block --- a \emph{\mwML{} Function} --- communicates with the outside world through two translation blocks.
 		These subsystems take care of proper unit conversion and reference frame translation, as the whole simulator is built around a down-pointing frame, while we felt
 		more comfortable with the usual choice of the Z axis pointing against gravity. Luckily, the signals involved include only yaw angles and changing the sign does the job.
-		\begin{center}
+		\begin{figure}[hbt]
+			\centering
 			\includegraphics[width=0.9\textwidth]{Images/Simulator/a4ws-full}
-		\end{center}
+			\caption{Full view of our \awwwws controller}
+			\label{fig:ctrl-a4ws-full}
+		\end{figure}
 
 		The beefy part of the controller is inside the function block \lstinline{optRear} and, as the name suggests, it is where the state is fed back to the system scaled by a scale
 		matrix, obtained through optimal control as described in \vref{sec:vs-ctrl}. Prior to this, two important action are performed.
@@ -202,11 +212,14 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 
 		Each maneuver is initiated at time \SI{20}{\second} and both the \emph{speed} and \emph{steering wheel angle} are set in the Reference Generator settings dialog.
 		The time delay is to let the speed build up before system excitation. For the more articulated maneuvers, the steering profile is obtained by a chain of step generators
-		compensating each other at different time steps. It's a crude yet effective way to lay a pattern and despite the unrealistic step variation of the steering, this ensures that
+		compensating each other at different time steps. As shown in \vref{fig:cm-s-full}, it's a crude yet effective way to lay a pattern and despite the unrealistic step variation of the steering, this ensures that
 		good results could only improve with smoother excitation.
-		\begin{center}
+		\begin{figure}[hbt]
+			\centering
 			\includegraphics[width=0.9\textwidth]{Images/Simulator/cm-s-full}
-		\end{center}
+			\caption{View of our custom Lane Change maneuver}
+			\label{fig:cm-s-full}
+		\end{figure}
 
 
 		\subsection{Environment}
@@ -231,12 +244,12 @@ we re-casted all the initial code to a \mwSL{} project and integrated it with th
 
 		Again, these disturbances kick in few seconds after the maneuver is initiated, to let the vehicle build up some spin and make the effect more dramatic.
 		As usual, model variants lets the two phenomena combine together at will.
-		\begin{figure}
+		\begin{figure}[hbtp]
 			\centering
 			\subfloat[][\lstinline{Environment} block]{\includegraphics[width=0.55\textwidth]{Images/Simulator/env-full}}\quad
 			\subfloat[][\lstinline{Wind Burst} sub-block]{\includegraphics[width=0.35\textwidth]{Images/Simulator/env-wind-burst}}
-			\caption{}
-			\label{}
+			\caption{The \lstinline{Environment} subsystem}
+			\label{fig:env-parts}
 		\end{figure}
 
 
