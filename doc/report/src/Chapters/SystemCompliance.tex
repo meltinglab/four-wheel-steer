@@ -1,0 +1,53 @@
+% !TEX encoding = UTF-8 Unicode
+% !TEX TS-program = pdflatex
+% !TEX spellcheck = en-US
+% !TEX root = ../Report.tex
+
+\chapter{System Compliance Analysis}
+Within the current chapter there will follows a system analysis from the . We will describe how we managed the automatic code generation tools provided by both Matlab and Simulink, in order to automatically get a final report containing all the needed documentation. Then, we are going to explain also the coding standard we dealt with (Misra C) in order to make our code rules-compliant.
+\subsection{Code Generation}
+Inside this section, we are going to explain how we have generated the code for our control system. In particular we decided to generate only the source C code, because we didn't have in mind a specific architecture on which to implement our system, we leave the compilation to a future in which we have a target hardware. We decided to generate the code only for our control system and not for the entire Matlab project, because in we won't need to implement on a microcontroller the whole simulator, just the control system. 
+\begin{figure} \label{Control Mask}
+		\centering
+		\includegraphics[width=0.7\textwidth]{Images/Simulator/ctrl-mask}
+		\caption{Block Representation of the control system seen from outside}	
+\end{figure}
+As you can see from \ref{Control Mask} we will have the following inputs for our controller:
+\begin{itemize}
+\item $\delta_{w}$: Steering angle of the 4 wheels;
+\item $\dot{x}$: Longitudinal speed of the vehicle;
+\item $\beta_{u}$: Side slip angle;
+\item $\omega_{z}$: Angular velocity.
+\end{itemize}
+And as output the objective of the controller, the control output:
+\begin{itemize}
+\item $\delta_{wr}$: Steering angle of rear wheels.
+\end{itemize}
+This block can therefore be interpreted, and will be translated into, a C function, with inputs as parameters of the function. This function/block also makes use of some parameters that describe the vehicle like mass, rotational inertia, cornering stiffness and also some characteristics of the environment that the vehicle is expected to operate in, like for example friction. You can anyway see all those values: parameters, input, outputs etc. in the code generation report that Matlab releases after the generation of the C code, as reported in \ref{Codegen Inports}. 
+\begin{figure} \label{Codegen Inports}
+		\centering
+		\includegraphics[width=0.9\textwidth]{Images/Simulator/codegen-inports}
+		\caption{Input parameters of the C function obtained through code generation}	
+\end{figure}
+You will anyway be able to generate the report automatically using Simulink Coder directly from the Matlab project that is present on the shared Github repository. Because of our use of some functions that were available in the Simulink environment but not in the C code generation, we had to adapt our system to the new constraints, for example the first obstacle that we met during the design of the application was the impossibility of inserting the lqr algorithm for the optimal control inside a Simulink block and inside the generated C code, due to this limitation we were bound to have the output of the control algorithm in a tabled manner, we stored these results in a lookup table that the C function saves as a variable and uses directly, choosing one value or the other based on which is the most suitable for the actual state of the system, but completely unconscious of the lqr algorithm. Another weapon what we had at our disposal during the development with Simulink was the continuous logging of the signals, we could put a logger on each branch of the block scheme and it would record the evolution of that signal over time, this isn't possible with a C function and we had to abandon the logging, with the control leaving in a continuous present. It will be then work of the other part of the software, the simulator, the recording of the signals over time in the SIL tests. The generation of C Code was possible with many different targets, we decided for  a generic Real-Time target with a direction towards execution efficiency, instead of debugging purpose, because the math of the operations that are executed inside the controller is robust and all the interaction of the parts were already debugged in the Simulink phase.
+\begin{figure} \label{Codegen Snippet}
+		\centering
+		\includegraphics[width=0.7\textwidth]{Images/Simulator/codegen-snippet}
+		\caption{Example of code obtained through automatic generation}	
+\end{figure}
+As you can see in figure \ref{Codegen Snippet} the automatically generated code is usually less readable than human written one, but it is logically correct and simplifies a lot the original block scheme, Simulink Coder is intelligent enough to eliminate or collapse together unnecessary or repeated blocks, thus creating a shorter and more on-point code.
+\newpage
+\subsection{MISRA C Analysys}
+
+MISRA C is a set of software development guidelines for the C programming language developed by MISRA (Motor Industry Software Reliability Association). Its aims are to facilitate code safety, security, portability and reliability in the context of embedded systems, specifically those systems programmed in ISO C / C90 / C99.
+
+Each Guideline is classified as  Mandatory (new for MISRA C:2012),Required or Advisory. Furthermore, the MISRA Compliance document permits Advisory guidelines to be Disapplied. Mandatory guidelines shall always be complied with Required guidelines shall be complied with, unless subject to a Deviation Advisory guidelines are considered good practice, but compliance is less formal.
+In order for a piece of software to claim to be compliant to the MISRA C Guidelines, all mandatory rules shall be met and all required rules and directives shall either be met or subject to a formal deviation. Advisory rules may be disapplied without a formal deviation. To apply modeling guidelines across projects and development teams, we used the Matlab Model Advisor to run checks on our model. When check runs, the Model Advisor reviews the model for conditions and configuration settings specified by the check. Moreover,we implement consistent modeling guidelines across our projects and development teams.In particular about our controller we make all the check of Modeling Standards for MiSRA C code generation. In brief this standard take into account the environment of the code, the language extensions regarding the assembler, Character sets, Identifier, Type and Constants. 
+This tool allow to run checks for the overall system, but we fixed our compliance target only about the test for the controller , for this reason we choice to make only the relevant tests that are usefull for our scope, these are showed in bottom figure. We obtained Misra C compliance for the overall test performed.  
+\\
+\begin{figure}[hpt]
+	\centering
+	\includegraphics[width=1\textwidth]{../Images/VCS/Misra.png}
+	\caption{MisraC:2012 compliance test}
+	\label{misra}
+\end{figure}   

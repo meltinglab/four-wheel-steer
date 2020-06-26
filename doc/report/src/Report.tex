@@ -1,0 +1,140 @@
+% !TEX encoding = UTF-8 Unicode
+% !TEX TS-program = pdflatex
+% !TEX spellcheck = en-US
+% !TEX root = Report.tex
+
+\documentclass[a4paper,11pt,titlepage]{report}
+%\pdfpagewidth
+%\paperwidth
+%\pdfpageheight
+%\paperheight
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian,english]{babel}
+
+\usepackage{indentfirst}
+%\frenchspacing
+
+% Limit section numbering and table of contents depths
+\setcounter{secnumdepth}{1}
+\setcounter{tocdepth}{1}
+
+% Custom header and footer
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhead{}
+\fancyhead[LO]{\leftmark}
+%\fancyhead[RO]{\chaptername}
+\fancyhead[RE]{\rightmark}
+%\fancyhead{RE}{\thesection}
+
+\fancyfoot{}
+\fancyfoot[LO,RE]{\thepage}
+
+
+% Scientific
+\usepackage{amsmath,amssymb}
+%\usepackage{amscd}
+\usepackage{siunitx}
+
+% Graphic stuff
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\usepackage{graphicx}
+\graphicspath{{Images/}}
+
+%\usepackage{rotating}
+
+%\usepackage{hologo}
+
+% Source code display
+\usepackage{matlab-prettifier}
+\lstset{
+	style = Matlab-editor,
+	basicstyle = \small\mlttfamily,
+%	tabsize = 2,
+	frame = leftline,
+	numbers=left,
+%	numberstyle=\tiny,
+%	stepnumber=1,
+%	firstnumber=last,
+	escapechar = ",
+	mlshowsectionrules = true,
+}
+
+
+% References
+\usepackage[english]{varioref}		% Pretty cross-references
+%\usepackage{showkeys}			% Label debug only. Comment for final release!
+
+\usepackage{comment}
+
+\usepackage{caption}
+%\captionsetup{labelformat=empty,textfont=sl}
+\captionsetup{font=small,labelfont={sf,bf}}
+\usepackage{subcaption}
+
+%\usepackage{multirow}
+%\usepackage{picture}
+%\numberwithin{figure}{section}		% <--- ???
+
+% Bring hyperlinks to life
+\usepackage[colorlinks,bookmarks,linktoc=all]{hyperref}
+%\usepackage{bookmarks}
+
+% Hyperref has to be the LAST package loaded, yet BEFORE geometry
+\usepackage[a4paper,width=150mm,top=25mm,bottom=25mm,bindingoffset=6mm]{geometry}
+\geometry{a4paper,tmargin=3cm,bmargin=3cm,lmargin=2.5cm,rmargin=2.5cm}
+%\textwidth16cm
+%\textheight24cm
+%\topmargin0mm
+%\headheight0mm
+%\oddsidemargin0mm
+%\evensidemargin0mm
+
+
+% Custom A4WS macros and aliases
+\usepackage{a4ws-aliases}
+
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{enumitem}
+\usepackage{filecontents}
+\usepackage{verbatim}
+\usepackage{eurosym}
+\usepackage[export]{adjustbox}
+
+\title{FOUR-WHEELS STEERING CONTROL SYSTEM}
+%\author{Team SottoPressione}
+\author{
+	    Bellesia Filippo 
+	    \and
+	    Catellani Filippo	
+	    \and
+	    Rocco Davide
+	    \and
+	    Valgimigli Filip 
+	   }
+\date{\today}
+
+
+\begin{document}
+
+	\input{TitlePage}
+
+	\begingroup
+		\hypersetup{hidelinks}
+		\tableofcontents
+	\endgroup
+
+	\input{Chapters/Intro}
+	\input{Chapters/VCS}
+	\input{Chapters/SystemLinearization}
+	\input{Chapters/SystemAnalysis}
+	\input{Chapters/VehicleSim}
+	\input{Chapters/OptimalControl}
+	\input{Chapters/SystemCompliance}
+	\input{Chapters/FinalResults}
+
+\end{document}

@@ -1,0 +1,61 @@
+% !TEX encoding = UTF-8 Unicode
+% !TEX TS-program = pdflatex
+% !TEX spellcheck = en-US
+% !TEX root = ../Report.tex
+
+\chapter{System Analysis: Stability, Reachability and Equilibrium Points}
+	Within the current chapter, we are going to describe how we analyzed our system. Especially, we will firstly show how we proved the system stability and, finally, we will exhibit the equilibrium points we got applying the optimal control theory.
+	\section{System Stability} \label{S}
+	From the theory point of view, it is possible to define "stable" a Linear Time Invariant (LTI) system if only all the eigenvalues of the matrix A are strictly negative. With regard to our specific condition, since A $\in M_{2X2}$, the purpose was to guarantee the following statement:\\
+	\begin{equation} \label{eq.Eigenvalues}
+		Re(\lambda_{1,2})=a_{1},a_{2} < 0
+	\end{equation}
+	During the design phase of our system model, we chose to directly include an automatic function computing the equation \ref{eq.Eigenvalues}. In particular, inside the Matlab file "LinPlant", we have reserved few lines of code both to perform the algebraic calculation and to display the final result directly to the user. Looking at the figure \ref{stability}, it is possible to see how we have implemented such a function.\\ With the aim of informing the user about the correctness of the algebraic computation, we display the sentence highlighted in purple. Once the real part of all the eigenvalues of a matrix is strictly negative, the matrix itself is declared "Hurwitz".
+	\begin{figure}
+		\centering
+		\lstinputlisting[caption={[Eigenvalues]}, firstline=90, lastline=95, firstnumber=80]{../../../model/LinPlant.m}
+		\caption{Lin Plant - Stability}
+		\label{stability}
+	\end{figure}
+	\section{System Reachability}
+	The procedure we adopted to prove the state space reachability has been almost the same one with respect to the previous section, \ref{S}. Like before, we inform the user, about process correctness, by means of a sentence highlighted in purple. As it is clearly visible from the image \ref{reachability}, the function firstly computes the rank of the matrix \textit{Reachable}, as it is present also in equation \ref{Reachability Matrix}, then it checks if it is equal or not than two, that is the dimension of our state space. We would like to point out that, the composition of matrix \textit{Reachable}, has been done by following the state space documentation. Therefore, the columns of such a matrix represent all the physical directions along which the control can actually work. \\
+	Making readable those kind of information can be really useful, for the user, in order to better understand what the control system is actually doing.
+	\begin{figure}
+		\centering
+		\lstinputlisting[caption={[Reachability]}, firstline=101, lastline=105, firstnumber=101]{../../../model/LinPlant.m}
+		\caption{Lin Plant - State Space Reachability}
+		\label{reachability}
+	\end{figure}
+	\begin{equation} \label{Reachability Matrix}
+	\ R =
+	\begin{bmatrix}
+	\ B_{1} & AB_{1}
+	\end{bmatrix}
+	\end{equation}
+	\section{Equilibrium Points}
+	After checking the system stability and the state space reachability, we proceeded with the purpose of getting the equilibrium points of both $\beta_{u}$ and $\omega_{z}$. Since we are linearizing around a straight trajectory, we have imposed the following condition to our LTI system:
+	\begin{equation} \label{Equilibrium condition}
+	\begin{bmatrix}
+	\dot{\tilde{\beta_{u}}} \\
+	\dot{\tilde{\omega_{z}}}
+	\end{bmatrix} =
+	\begin{bmatrix}
+	0 \\
+	0
+	\end{bmatrix} = A
+	\begin{bmatrix}
+	\tilde{\beta_{u}} \\
+	\tilde{\omega_{z}}
+	\end{bmatrix}
+	 + B_{2}[\tilde{\delta_{wf}}]
+	\end{equation}
+	As a matter of facts, the $B_{1}$ contribution can be neglected because, around a straight trajectory, our control variable $\delta_{wr}$ is equal to zero. The equation \ref{Equilibrium condition} is directly given by the "equilibrium point" definition: \textit{to be considered an equilibrium point, the current parameter must have a zero time derivative}. Therefore, if the matrix A is invertible, we can write the following statement:
+	\begin{equation} \label{eq points}
+	\begin{bmatrix}
+	\tilde{\beta_{uEQ}} \\
+	\tilde{\omega_{zEQ}}
+	\end{bmatrix} =
+	A^{-1}[- B_{2} \tilde\delta_{wf}]
+	\end{equation}
+	From the equation \ref{eq points} we got our equilibrium points, $\beta_{uEQ}$ and $\omega_{zEQ}$. These equilibrium points are different from the linearization points that we computed at the beginning, while we were defining the linearized system. Given that our objective is to obtain a stable system, we then applied trajectory tracking to keep the system around these states.\\
+	Our first attempt at computing the equilibrium points was positioned at the startup of the system, in the sense that were computing them shortly after the linearization of the system. This led us to obtain a discrete $\delta_{wf_{0}}$ and $V_{0}^B$. Later on we understood that the inverse of a 2x2 matrix was not too heavy for a microcontroller and we moved the computation of the equilibrium states to our real-time controller. In this way we do not have anymore a discrete recollection of equilibrium states, instead we extract the current $\delta_{wf}$ and $V^B$ from the simulator and we obtain a continuous function of the equilibrium states over time.

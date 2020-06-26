@@ -1,0 +1,119 @@
+% !TEX encoding = UTF-8 Unicode
+% !TEX TS-program = pdflatex
+% !TEX spellcheck = en-US
+% !TEX root = ../Report.tex
+
+\chapter{Optimal Control Design}
+Inside this chapter, we are going to show the control system we designed for our application. This phase has been the most complex one for different reasons. Generally speaking, the design of a specific control law for each physical system depends by many factors, having different levels of influence. For this reason, we tried to design the best possible control law by considering more the most important elements and neglecting and/or minimizing the ones with a low impact. As a consequence, this step required us lots of time to be fully accomplished.\\
+At first we brought our devised system into Matlab, initializing all these variables able to influence its behaviour, so that the control system could act over a vehicle model that was similar to the one used by the simulator. Then, we built the handles to connect them with the simulator in order to achieve a simulation environment inside which we could test our control system in comparison with an open loop simulation. Moreover, we merged the simulator and the control law together in Simulink and we started optimizing the system. Finally, after some considerations, we have implemented also the disturbance compensation since, in our case, we knew its value a priori. In this way, we could reach an optimal control system acting on the \textit{state} variables by considering also the influence given by the human driver, $\delta_{wf}$.\\
+\begin{figure}
+		\centering
+		\lstinputlisting[caption={[SimDataImport]}, firstline=43, lastline=47, firstnumber=43]{../../../model/LinPlant.m}
+		\caption{Import vehicle data from the simulator}
+		\label{stability}
+	\end{figure}
+\section{Control Law design}
+This step was the most critical one because of its close correlation with the project purpose itself. Our starting object was to develop a control law able to act over the steering angle of the rear wheels, $\delta_{wr}$. We chose to use the Optimal Control Law because that is what we have been presented during the course. In the following paragraphs there will be a brief description of our procedure. In particular, we did not apply a simple optimal control just to reduce the errors.
+\section{Cost Function $J$ Analysis}
+Starting from the main theoretical concepts, we studied the real meaning of "Cost Function" and its elements. The function's goal is to design a control system, $u$, able to minimize the function $J$ itself. In a nutshell, if a certain condition is strongly desired, we have to associate to it a low cost, and viceversa. \\
+There follow the linear quadratic form of the cost function $J$ for a general LTI system:
+\begin{equation}
+J = x^{T}(t_{f}) S_{f} x(t_{f}) + \int_{t_{0}}^{t_{f}} e^{T} Q e + u^{T} R u \ dt
+\end{equation}
+where:
+\begin{itemize}
+	\item $e$ represents a linear combination of \textit{states} x;
+	\item $u$ represents the control law;
+	\item $ [t_{0},t_{f}] $ represents the time interval in which we evaluated our cost function J;
+	\item $ S_{f} = S_{f}^{T} \geq0 $ represents the cost associated to the state once it is evaluated in $t=t_{f}$, so "how much far i am from the origin";
+	\item $ Q=Q^{T}\geq 0 $ and $ R=R^{T}\geq 0 $ represent, respectively, the costs for having $e\neq0$ and $u\neq0$, during the time span.
+\end{itemize}
+\section{Q and R Matrices}
+We could reach our final goal, in terms of meaningful imposed rear steering angle, through the "tuning" process of matrices $Q$ and $R$. For what concern the matrix $S$, we set it equal to zero because we did not need to evaluate the error on the final condition but only during the evolution of the System, so we focused on Q and R matrices. In particular, we started with the rule of thumb of setting the values of these matrices to the inverse of the maximum error we could accept on the states and to the inverse of the maximum control we could apply.
+\begin{equation} \label{Q MAtrix}
+	\ Q =
+	\begin{bmatrix}
+	\ Q_{11} & 0\\
+	\ 0 & Q_{22}
+	\end{bmatrix} = \frac{1}{2}
+	\begin{bmatrix}
+	\ inv(max(\beta_{u}-\beta_{u_{ref}})) & 0\\
+	\ 0 & inv(max(\omega_{z}-\omega_{f_{ref}}))
+	\end{bmatrix}
+\end{equation}
+\begin{equation} \label{R MAtrix}
+	\ R =
+	\begin{bmatrix}
+	\ R_{11}
+	\end{bmatrix} =
+	\begin{bmatrix}
+	\ inv(max(\delta_{r}))
+	\end{bmatrix}
+\end{equation}
+Q is a diagonal matrix, where $ Q_{11} $ represent the cost of being distant from the equilibrium state of $ \omega_{z} $ and $ Q_{22} $ represents the cost of being distant from the ideal $ \beta_{u} $. $ R_{11} $ instead is relative to the control.
+The tuning first steered $ R_{11} $ in order to keep it inside the physical bounds that we decided to set (still tunable, but set 5° in the definitive form), then we modified $ Q_{11} $ and $ Q_{22} $ each one in relation with the other, in order to get the best possible compromise.
+\section{K multiplier}
+Following the general theory of optimal control we should extract one single K matrix around the linearization point. This made our working condition very limited, because, by choosing a linearization point, we would have to choose one single steering angle and angular velocity. This condition was restricting the validity range of our system around a certain kind of curve, that initially has been specified as a straight trajectory ($\omega_{z}=0$).
+This reason led us towards the consideration of extracting not one matrix for K, but a whole range of values, based on two inputs from the driver:
+\begin{itemize}
+	\item front steering angle: $\delta_{wf}$;
+	\item current vehicle speed: $V_0$.
+\end{itemize}
+This extraction is not done in real time, due to the relatively high computational load of performing an LQR algorithm. It, instead, is done only once at the startup of the system (now that we are in prototypation phase, later on it will only be performed once and for all). After this initial computations made at some discrete linearization points, the results will be stored in lookup tables and, at run-time, the only workload for the microcontroller will be to take as input the actual state of the machine (specifically the two input parameters written in the bullet list here above) and perform matrix multiplication as usual.\\
+Obviously, given the discrete nature of the lookup table, it will not be possible to have a perfect match for the actual disturbances of the vehicle that span across a continuous space, so we will have to approximate to the nearest point of linearization. It will be anyway a better approximated solution with respect to a system with a single linearization point and a single K.\\
+Another reason why we have devoted one script for the K matrices extraction and one for the computation of real-time control is that, in general, you can not generate C code using Matlab coder (or even a Simulink block with Matlab code) containing the lqr algorithm present in the control system toolbox. We needed to keep it separate.\\
+Anyway, due to the continuous variation of the equilibrium states, we did not have big problems on the steep variation of controls.
+\begin{figure}[!h]
+\includegraphics[width=\linewidth]{../Images/KLut.jpg}\caption{Excerpt of K Lookup Table}
+\end{figure}
+\section{H multiplier} \label{H section}
+As we introduced at the beginning of current chapter, we have implemented also the disturbance compensation, due to $\delta_{wf}$, inside our control law. In particular, since we would like to reach a stable vehicle characterized by a constant $\omega_{z}$ (so that it is as similar as possible to $\omega_{z_{ref}}$), we focused our attention mainly on this \textit{state}. Therefore, this choice led us to compensate the disturbance effect mostly for $\omega_{z}$ \textit{state}. As well, even after this choice, we noticed that, also the $\beta_{u}$, has been correctly compensated.
+
+Up to now, by means of the LQR optimal control system application, once the real working conditions differ from the equilibrium points we found, we can correct the vehicle behaviour. However, such a system always feels the presence of the external disturbance, $\delta_{wf}$. In order to make "disturbance-immune" (from $\delta_{wf}$ point of view, only) our controller, we computed the needed parameter to be added to our final control law. That parameter, \ref{HEquat}, has the purpose of considering the disturbance effect and compensating for it.
+The following equations will better clarify this concept.
+
+In order to correctly compute the H equation, we started from the following general equation true for an LTI system:
+\begin{equation} \label{StartEq}
+	\dot{\tilde{x}} = A \tilde{x} + B_{1}\tilde{\delta_{wr}} + B_{2}\tilde{\delta_{wf}} = 0
+\end{equation}
+Then, we imposed the next equation as our "new" control law taking into account also the presence of disturbance:
+\begin{equation} \label{new u}
+	u = - K \tilde{x} + H \tilde{d}
+\end{equation}
+By including the equation \ref{new u} inside the \ref{StartEq} one, we obtained:
+\begin{equation}
+	\dot{\tilde{x}} = A \tilde{x} + B_{1}(- K \tilde{x} + H \tilde{d}) + B_{2}\tilde{\delta_{wf}} = 0
+\end{equation}
+Focusing our attention to H parameter, we reached the following final equation:
+\begin{equation}
+ (B_{1} H + B_{2})\tilde{d} = 0
+\end{equation}
+As we previously said, if we consider the disturbance compensation mainly for the $\omega_{z}$ \textit{state}, we finally obtain:
+\begin{equation}
+\label{HEquat}
+H = -\frac{b_{{2}_{21}}}{b_{{1}_{21}}}
+\end{equation}
+\section{Saturation of control and states}
+As we have already written before, we saturate the control signal to a physically feasible range of steering, but this is not enough. As a matter of facts, if the achieved results of the LQR algorithm computing $\omega_{z_{ref}}$ or $\beta_{u_{ref}}$ are out of any physically possible range, our control will always be saturated, thus not exercising the control that we should expect from it. For this reason we apply a saturation of the \textit{states}, depending on the vehicle velocity.
+\section{Resulting Control}
+ Merging together all the previous concepts, we can actually show our final control law:
+\begin{equation} \label{Resulting Control}
+	\ \delta_{r} = -
+	\begin{bmatrix}
+	\ K_{1} & K_{2}
+	\end{bmatrix}
+	\begin{bmatrix}
+	\ \beta_{u}-\beta_{u_{ref}} \\
+	\ \omega_{z}-\omega_{z_{ref}}
+	\end{bmatrix} +
+	H \delta_{wf}
+\end{equation}
+Where:
+\begin{itemize}
+	\item K matrix is obtained from the lookup table generated at startup;
+	\item $\beta_{u}$ and $\omega_{z}$ are the current \textit{state} values;
+	\item $\omega_{z_{ref}}$ is the result of a real time computation of equilibrium states;
+	\item $\beta_{u_{ref}}$, instead, is set equal to 0 because we would like to have the front of the car as aligned as possible with the direction of the velocity vector;
+	\item H is the scalar multiplication factor described inside subsection \ref{H section};
+	\item $\delta_{wf}$ is the system \textit{disturbance} variable "fixed", moment by moment, by human driver.
+\end{itemize}
