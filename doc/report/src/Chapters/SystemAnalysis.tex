@@ -18,7 +18,7 @@
 		\label{stability}
 	\end{figure}
 	\section{System Reachability}
-	The procedure we adopted to prove the state space reachability has been almost the same one with respect to the previous section, \ref{S}. Like before, we inform the user, about process correctness, by means of a sentence highlighted in purple. As it is clearly visible from the image \ref{reachability}, the function firstly computes the rank of the matrix \textit{Reachable}, as it is present also in equation \ref{Reachability Matrix}, then it checks if it is equal or not than two, that is the dimension of our state space. We would like to point out that, the composition of matrix \textit{Reachable}, has been done by following the state space theory we dealt with in class. Therefore, the columns of such a matrix represent all the physical directions along which the control can actually work. \\
+	The procedure we adopted to prove the state space reachability has been almost the same one with respect to the previous section, \ref{S}. Like before, we inform the user, about process correctness, by means of a sentence highlighted in purple. As it is clearly visible from the image \ref{reachability}, the function firstly computes the rank of the matrix \textit{Reachable}, as it is present also in equation \ref{Reachability Matrix}, then it checks if it is equal or not than two, that is the dimension of our state space. We would like to point out that, the composition of matrix \textit{Reachable}, has been done by following the state space documentation. Therefore, the columns of such a matrix represent all the physical directions along which the control can actually work. \\
 	Making readable those kind of information can be really useful, for the user, in order to better understand what the control system is actually doing.
 	\begin{figure}
 		\centering
@@ -49,7 +49,7 @@
 	\end{bmatrix}
 	 + B_{2}[\tilde{\delta_{wf}}]
 	\end{equation}
-	As a matter of facts, the $B_{1}$ contribution can be neglected because, around a straight trajectory, our control variable $\delta_{wr}$ is equal to zero. The equation \ref{Equilibrium condition} is directly given by the "equilibrium point" definition: \textit{to be considered an equilibrium poit, the current parameter must have a zero time derivative}. Therefore, if the matrix A is invertible, we can write the following statement:
+	As a matter of facts, the $B_{1}$ contribution can be neglected because, around a straight trajectory, our control variable $\delta_{wr}$ is equal to zero. The equation \ref{Equilibrium condition} is directly given by the "equilibrium point" definition: \textit{to be considered an equilibrium point, the current parameter must have a zero time derivative}. Therefore, if the matrix A is invertible, we can write the following statement:
 	\begin{equation} \label{eq points}
 	\begin{bmatrix}
 	\tilde{\beta_{uEQ}} \\
