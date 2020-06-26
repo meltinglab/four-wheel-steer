@@ -13,9 +13,9 @@ At first we brought our devised system into Matlab, initializing all these varia
 		\label{stability}
 	\end{figure}
 \section{Control Law design}
-This step was the most critical one because of its close correlation with the project purpose itself. Our starting object was to develop a control law able to act over the steering angle of the rear wheels, $\delta_{wr}$. We chose to use the Optimal Control Law because that's what we have been presented during the course. In the following paragraphs there will be a brief description of our procedure. In particular, we didn't apply a simple opìtimal control to reduce the erros
+This step was the most critical one because of its close correlation with the project purpose itself. Our starting object was to develop a control law able to act over the steering angle of the rear wheels, $\delta_{wr}$. We chose to use the Optimal Control Law because that is what we have been presented during the course. In the following paragraphs there will be a brief description of our procedure. In particular, we did not apply a simple optimal control just to reduce the errors.
 \section{Cost Function $J$ Analysis}
-Starting from the theory, we studied the real meaning of "Cost Function" and its elements. The function's goal is to design a control system, $u$, ables to minimize the function $J$ itself. In a nutshell, if a certain condition is strongly desired, we have to associate to it a low cost, and viceversa. \\
+Starting from the main theoretical concepts, we studied the real meaning of "Cost Function" and its elements. The function's goal is to design a control system, $u$, able to minimize the function $J$ itself. In a nutshell, if a certain condition is strongly desired, we have to associate to it a low cost, and viceversa. \\
 There follow the linear quadratic form of the cost function $J$ for a general LTI system:
 \begin{equation}
 J = x^{T}(t_{f}) S_{f} x(t_{f}) + \int_{t_{0}}^{t_{f}} e^{T} Q e + u^{T} R u \ dt
@@ -24,12 +24,12 @@ where:
 \begin{itemize}
 	\item $e$ represents a linear combination of \textit{states} x;
 	\item $u$ represents the control law;
-	\item $ [t_{0},t_{f}] $ represents the time spain in which we evaluated our cost function J;
+	\item $ [t_{0},t_{f}] $ represents the time interval in which we evaluated our cost function J;
 	\item $ S_{f} = S_{f}^{T} \geq0 $ represents the cost associated to the state once it is evaluated in $t=t_{f}$, so "how much far i am from the origin";
 	\item $ Q=Q^{T}\geq 0 $ and $ R=R^{T}\geq 0 $ represent, respectively, the costs for having $e\neq0$ and $u\neq0$, during the time span.
 \end{itemize}
 \section{Q and R Matrices}
-We could reach our final goal, in terms of meaningful imposed rear steering angle, through the "tuning" process of matrices $Q$ and $R$. For what concern the matrix $S$, we set it equal to zero because we didn't need to evaluate the error on the final condition, only during the evolution of the System, so we focused on Q and R matrices. In particular, we started with the rule of thumb of setting the values of these matrices a the inverse of the maximum error we could accept on the states and the inverse of the maximum control we could apply
+We could reach our final goal, in terms of meaningful imposed rear steering angle, through the "tuning" process of matrices $Q$ and $R$. For what concern the matrix $S$, we set it equal to zero because we did not need to evaluate the error on the final condition but only during the evolution of the System, so we focused on Q and R matrices. In particular, we started with the rule of thumb of setting the values of these matrices to the inverse of the maximum error we could accept on the states and to the inverse of the maximum control we could apply.
 \begin{equation} \label{Q MAtrix}
 	\ Q =
 	\begin{bmatrix}
@@ -51,9 +51,9 @@ We could reach our final goal, in terms of meaningful imposed rear steering angl
 	\end{bmatrix}
 \end{equation}
 Q is a diagonal matrix, where $ Q_{11} $ represent the cost of being distant from the equilibrium state of $ \omega_{z} $ and $ Q_{22} $ represents the cost of being distant from the ideal $ \beta_{u} $. $ R_{11} $ instead is relative to the control.
-The tuning first steered $ R_{11} $ in order to keep it inside the physical bounds that we decided to set (still tunable, but set 5° in the definitive form), then we modified $ Q_{11} $ and $ Q_{22} $ one in relation with the other, in order to get the best possible compromise.
+The tuning first steered $ R_{11} $ in order to keep it inside the physical bounds that we decided to set (still tunable, but set 5° in the definitive form), then we modified $ Q_{11} $ and $ Q_{22} $ each one in relation with the other, in order to get the best possible compromise.
 \section{K multiplier}
-Following the theory of optimal control we should extract one single K matrix around the linearization point. This made our working condition very limited, because, by choosing a linearization point, we would have to choose one single steering angle and angular velocity. This condition was restricting the validity range of our system around a certain kind of curve, that initially has been specified as a straight trajectory ($\omega_{z}=0$).
+Following the general theory of optimal control we should extract one single K matrix around the linearization point. This made our working condition very limited, because, by choosing a linearization point, we would have to choose one single steering angle and angular velocity. This condition was restricting the validity range of our system around a certain kind of curve, that initially has been specified as a straight trajectory ($\omega_{z}=0$).
 This reason led us towards the consideration of extracting not one matrix for K, but a whole range of values, based on two inputs from the driver:
 \begin{itemize}
 	\item front steering angle: $\delta_{wf}$;
@@ -61,8 +61,8 @@ This reason led us towards the consideration of extracting not one matrix for K,
 \end{itemize}
 This extraction is not done in real time, due to the relatively high computational load of performing an LQR algorithm. It, instead, is done only once at the startup of the system (now that we are in prototypation phase, later on it will only be performed once and for all). After this initial computations made at some discrete linearization points, the results will be stored in lookup tables and, at run-time, the only workload for the microcontroller will be to take as input the actual state of the machine (specifically the two input parameters written in the bullet list here above) and perform matrix multiplication as usual.\\
 Obviously, given the discrete nature of the lookup table, it will not be possible to have a perfect match for the actual disturbances of the vehicle that span across a continuous space, so we will have to approximate to the nearest point of linearization. It will be anyway a better approximated solution with respect to a system with a single linearization point and a single K.\\
-Another reason why we have devoted one script for the extraction of K matrices and another one for the computation of realtime control is that you can't generate C code using matlab coder or even a simulink block with Matlab code containing the lqr algorhytm present in the control system toolbox. We needed to keep it separate.\\
-Anyway due to the continuous variation of the equilibrium states, we dont'have big problems on the steep variation of controls.
+Another reason why we have devoted one script for the K matrices extraction and one for the computation of real-time control is that, in general, you can not generate C code using Matlab coder (or even a Simulink block with Matlab code) containing the lqr algorithm present in the control system toolbox. We needed to keep it separate.\\
+Anyway, due to the continuous variation of the equilibrium states, we did not have big problems on the steep variation of controls.
 \begin{figure}[!h]
 \includegraphics[width=\linewidth]{../Images/KLut.jpg}\caption{Excerpt of K Lookup Table}
 \end{figure}
@@ -72,7 +72,7 @@ As we introduced at the beginning of current chapter, we have implemented also t
 Up to now, by means of the LQR optimal control system application, once the real working conditions differ from the equilibrium points we found, we can correct the vehicle behaviour. However, such a system always feels the presence of the external disturbance, $\delta_{wf}$. In order to make "disturbance-immune" (from $\delta_{wf}$ point of view, only) our controller, we computed the needed parameter to be added to our final control law. That parameter, \ref{HEquat}, has the purpose of considering the disturbance effect and compensating for it.
 The following equations will better clarify this concept.
 
-In order to correctly compute the H equation, we started from the following general equation:
+In order to correctly compute the H equation, we started from the following general equation true for an LTI system:
 \begin{equation} \label{StartEq}
 	\dot{\tilde{x}} = A \tilde{x} + B_{1}\tilde{\delta_{wr}} + B_{2}\tilde{\delta_{wf}} = 0
 \end{equation}
@@ -94,7 +94,7 @@ As we previously said, if we consider the disturbance compensation mainly for th
 H = -\frac{b_{{2}_{21}}}{b_{{1}_{21}}}
 \end{equation}
 \section{Saturation of control and states}
-As we have already written before, we saturate the control signal to a physically feasible range of steering, but this is not enough. As a matter of facts, if the achieved results of the LQR algorithm computing $\omega_{z_{ref}}$ or $\beta_{u_{ref}}$ are out of any physically possible range, our control will always be saturated, thus not exercising the control that we should expect from it. For this reason we apply a saturation of the \textit{states}, depending on the vehicle velocity, like the one implemented in the ESP example.
+As we have already written before, we saturate the control signal to a physically feasible range of steering, but this is not enough. As a matter of facts, if the achieved results of the LQR algorithm computing $\omega_{z_{ref}}$ or $\beta_{u_{ref}}$ are out of any physically possible range, our control will always be saturated, thus not exercising the control that we should expect from it. For this reason we apply a saturation of the \textit{states}, depending on the vehicle velocity.
 \section{Resulting Control}
  Merging together all the previous concepts, we can actually show our final control law:
 \begin{equation} \label{Resulting Control}
